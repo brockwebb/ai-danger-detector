@@ -61,11 +61,11 @@ E_required = E_min
            + beta_i * (harm * complexity * error_uncertainty)^alpha_i
 ```
 
-This formula is inspectable and falsifiable. Its assumptions can be read, criticized, adjusted, tested against cases, and replaced when evidence justifies a better structure. It is not a final scientific model, and it should not be treated as an objective detector of safety or danger.
+This formula is inspectable and intended to become testable once variables, thresholds, calibration data, and validation cases are specified. It is not a final scientific model, and it should not be treated as an objective detector of safety or danger.
 
-The evolved framework combines Bayesian calibration, Monte Carlo uncertainty propagation, and Markov reliance workflow modeling. Bayesian calibration supports explicit priors and updates as evidence accumulates. Monte Carlo simulation can show how uncertainty in rates, severity, detectability, and reversibility affects oversight recommendations. Markov reliance workflow modeling can represent transitions from AI output to user acceptance, verification, escalation, correction, or consequential action.
+The planned numerical layer will combine Bayesian calibration, Monte Carlo uncertainty propagation, and Markov reliance workflow modeling.
 
-`docs/numerical-framework.md` contains the technical foundation for this numerical layer.
+A companion `docs/numerical-framework.md` document will define the technical foundation for this numerical layer.
 
 ## Calibration, Noise, and Moving Target
 
