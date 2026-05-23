@@ -51,7 +51,7 @@ AI-Danger-Detector/
 |
 |-- core_model/
 |   |-- model_definition.py         # Early equations, parameters, and prototype logic
-|   `-- parameters.json             # Domain presets and parameter ranges
+|   `-- domain_profiles.py          # Domain presets and prototype parameter assumptions
 |
 |-- model_validation/               # Exploratory model behavior checks
 |   |-- parameter_sensitivity.py    # Parameter sweeps and sensitivity exploration

@@ -65,7 +65,7 @@ This formula is inspectable and intended to become testable once variables, thre
 
 The planned numerical layer will combine Bayesian calibration, Monte Carlo uncertainty propagation, and Markov reliance workflow modeling.
 
-A companion `docs/numerical-framework.md` document will define the technical foundation for this numerical layer.
+The companion `docs/numerical-framework.md` document defines the technical foundation for this numerical layer.
 
 ## Calibration, Noise, and Moving Target
 
