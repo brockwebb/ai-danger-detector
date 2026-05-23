@@ -47,6 +47,18 @@ Calibration should preserve uncertainty when these risks cannot be resolved. A t
 
 These milestones should be treated as cumulative checks. Passing an early milestone does not validate the full framework. For example, face-validity review can show that the rubric is understandable and plausible, but it cannot prove predictive accuracy or operational reliability.
 
+Face-validity review should ask domain experts whether the factors, oversight bands, examples, and escalation logic match known failure modes. Reviewers should identify missing factors, confusing terms, domain-specific exceptions, and cases where the rubric would encourage either excessive confidence or unnecessary restriction.
+
+Retrospective scoring should use a documented case set with inclusion criteria. The case set should define which incidents, near misses, benign uses, and comparison cases are included; why they are included; and what evidence is available for each case. Independent reviewers should apply ADD without seeing the final adjudicated label when feasible. A separate adjudication process should record harm outcomes, oversight outcomes, and whether escalation would have been appropriate. Validation should then compare ADD escalation against those adjudicated outcomes, including under-escalation, over-escalation, and cases where the available record is too weak for a confident judgment.
+
+Sensitivity analysis should test whether conclusions depend on fragile choices of weights, priors, thresholds, or Markov transition probabilities. Reports should identify which assumptions most affect the oversight band, the probability of threshold crossing, and workflow outcomes such as unverified action or realized harm.
+
+Inter-rater reliability testing should have independent reviewers apply the rubric to the same cases using the same written instructions. Reports should include agreement statistics appropriate to the rating structure, disagreement themes, and examples of factor definitions that caused inconsistent scoring. Ambiguous rubric language should be revised and retested rather than treated as reviewer error by default.
+
+Prospective triage should begin in low-risk organizational settings where AI use can be observed without exposing people to severe, irreversible, or rights-impacting consequences. Each pilot should define pre-specified metrics such as escalation frequency, reviewer burden, user acceptance, correction rates, near misses, under-escalation concerns, and cases abandoned because review requirements were too high. Escalations, overrides, and near misses should be reviewed to determine whether ADD changed decisions in a useful, explainable, and proportionate way.
+
+Recalibration should happen on a periodic cadence and when material triggers occur. Triggers include model or system version changes, workflow changes, prompt or interface changes, retrieval or tooling changes, newly observed failures or near misses, benchmark regressions, policy changes, and credible domain-transfer evidence showing that assumptions from one setting do or do not apply in another. Recalibration reports should preserve prior versions of priors, weights, thresholds, transition assumptions, and rubric text so readers can see what changed and why.
+
 ## Failure Criteria
 
 ADD should be revised if validation work shows any of the following patterns:
