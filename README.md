@@ -88,4 +88,4 @@ This project and all associated code and materials are intended solely for educa
 
 ## Contact
 
-For questions or feedback, please reach out via LinkedIn (u: /brockwebb).
+For questions or feedback, please reach out via [LinkedIn](https://www.linkedin.com/in/brockwebb/).
