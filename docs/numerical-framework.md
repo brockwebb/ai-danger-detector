@@ -22,13 +22,17 @@ The point of combining these methods is to make uncertainty visible. ADD should 
 
 Bayesian calibration treats ADD parameters as uncertain quantities. Initial priors should be explicit, documented, and revisable. As evidence arrives from expert review, incident reports, controlled evaluations, near-miss analysis, field studies, or deployment monitoring, priors can be updated into posteriors.
 
+Those updates require more than collecting examples. Each update should specify an explicit likelihood or evidence-weighting rule, source-quality notes, an assessment of bias and missingness, and uncertainty widening when evidence is anecdotal, sparse, or not comparable to the target workflow.
+
 | Parameter | Meaning | Example prior form |
 | --- | --- | --- |
-| lambda_error | Rate of meaningful AI errors or misuse events | Beta distribution or bounded triangular distribution |
+| p_error_per_task | Bounded task-level probability of a meaningful AI error or misuse event | Beta distribution or bounded triangular distribution |
 | severity | Magnitude of harm/loss if an error matters | Triangular, log-normal, or expert-elicited ordinal distribution |
 | detectability | Probability a user detects a meaningful error before action | Beta distribution conditioned on expertise |
 | reversibility | Probability harm can be corrected after action | Beta distribution conditioned on domain and action type |
 | verification_burden | Effort or expertise required to check the output | Ordinal distribution mapped to oversight bands |
+
+A bounded task-level probability such as `p_error_per_task` is suitable for Beta priors. If ADD needs to model event intensity over time, exposure, transactions, or usage volume, it should use a separate `lambda_error_rate` parameter with Gamma or log-normal priors and Poisson or negative-binomial count models. This preserves the lambda/rate concept without forcing a Beta prior onto an unbounded rate.
 
 Priors should be versioned by domain, model family, task type, and date. A prior for consumer medical triage should not silently carry over to legal drafting, financial analysis, software deployment, or public-benefits administration. A prior for one model family or release date may also become stale as model capability, interface design, retrieval quality, prompting practices, and governance controls change.
 
@@ -40,18 +44,25 @@ Monte Carlo simulation propagates uncertainty through the ADD model. Instead of 
 
 ```text
 for simulation in 1..N:
-    sample lambda_error from posterior or prior
+    sample p_error_per_task from posterior or prior
     sample severity from posterior or prior
     sample detectability from posterior or prior
     sample reversibility from posterior or prior
     sample verification_burden from posterior or prior
+    sample transition probabilities from posterior or prior
 
     calculate oversight_score
     assign oversight_band
+    run or analytically evaluate the Markov workflow
+
     record whether thresholds are crossed:
         trained_review_required
         expert_review_required
         expert_led_or_no_autonomous_use
+    record workflow outcomes:
+        unverified_action
+        realized_harm
+        expected_loss
 
 report:
     median oversight_score
@@ -59,9 +70,12 @@ report:
     P(trained_review_required)
     P(expert_review_required)
     P(expert_led_or_no_autonomous_use)
+    P(unverified_action)
+    P(realized_harm)
+    expected_loss
 ```
 
-The simulation output should be read as a decision-support summary, not as a precise measurement. The most useful outputs are ranges, probabilities of crossing review thresholds, and sensitivity to assumptions.
+The simulation output should be read as a decision-support summary, not as a precise measurement. The most useful outputs are ranges, probabilities of crossing review thresholds, workflow outcome probabilities, expected loss estimates, and sensitivity to assumptions.
 
 ## Markov Workflow Model
 
@@ -77,9 +91,11 @@ Markov workflow modeling represents AI reliance as movement through states. This
 | S5 | Error detected/corrected | A meaningful error is found, corrected, escalated, or contained. |
 | S6 | Action taken | The output influences a decision, communication, operation, or other real-world action. |
 | S7 | Harmless outcome | The workflow exits without material harm or loss. |
-| S8 | Realized harm/loss | The workflow exits with material harm, loss, delay, rights impact, safety impact, or other consequential damage. |
+| S8 | Realized harm/loss | The workflow exits with harm occurrence or material impact. |
 
 S7 and S8 are terminal states. S5 is not necessarily terminal: it may loop back to S1 for a regenerated output, back to S3 for additional checking, back to S4 for expert review, or out of the workflow if the use is abandoned.
+
+S8 represents that material harm or impact occurred; it is not itself the severity magnitude. Severity or loss should be attached as a separate conditional cost variable when S8 is reached or when explicitly modeled risky transitions occur.
 
 The Markov layer can be used to estimate not only "how risky is this use?" but also "where should the workflow add checkpoints?" A scenario with modest error rates can still be dangerous if transition probabilities push users from generated output to unverified action.
 
@@ -91,7 +107,7 @@ Transition probabilities should be calibrated by domain, workflow design, user e
 - Higher domain complexity decreases P(S3 -> S5) for non-experts.
 - Strong governance increases P(S1 -> S4) and decreases P(S1 -> S2).
 - Higher detectability increases error correction before action.
-- Lower reversibility increases expected loss once workflow reaches S6.
+- Lower reversibility increases conditional loss given erroneous action or realized harm. It should not be modeled as a Markov state probability unless the implementation explicitly encodes reversibility as a transition effect.
 - Model improvement can reduce P(error at S1), but does not eliminate verification burden.
 
 These assumptions are directional, not validated coefficients. Future implementation should expose them for review, sensitivity testing, and revision.
