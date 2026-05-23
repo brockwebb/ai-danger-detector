@@ -24,7 +24,7 @@ Risk-bearing AI use requires domain competence because harm detection is itself 
 
 ## Deliverables
 
-Create four public-facing project artifacts:
+Create five public-facing project artifacts:
 
 1. `docs/whitepaper.md`
    - Main governance-facing paper.
@@ -36,12 +36,18 @@ Create four public-facing project artifacts:
    - Defines factors, example scales, decision bands, and how weights should be interpreted.
    - Explains that current parameters are assumptions requiring calibration.
 
-3. `docs/validation-agenda.md`
+3. `docs/numerical-framework.md`
+   - Technical explanation of the numerical machinery behind the whitepaper.
+   - Defines the three core layers: Bayesian calibration, Monte Carlo uncertainty propagation, and Markov reliance workflow modeling.
+   - Describes state definitions, transition probabilities, threshold-crossing estimates, and how uncertainty should be reported.
+   - Makes clear that priors, transition probabilities, and thresholds are provisional and require tuning.
+
+4. `docs/validation-agenda.md`
    - Honest research and validation roadmap.
    - Describes how to tune weights using documented cases, incident evidence, expert elicitation, sensitivity analysis, and empirical testing.
    - Names the risks of anecdotal skew and human overprediction of vivid negative events.
 
-4. `README.md` update
+5. `README.md` update
    - Reframe the repository away from a finished "danger detector" product.
    - Link to the whitepaper and supporting docs.
    - Keep the existing prototype visible as a reference implementation, not a validated tool.
@@ -74,28 +80,52 @@ Code cleanup, tests, CLI work, or a web demo are future phases. They are outside
    - Present the current formula as an inspectable early scoring model.
    - Avoid presenting it as final, objective, validated, or authoritative.
 
-7. Calibration, noise, and the moving target problem
+7. Numerical framework
+   - Introduce Bayesian calibration for uncertain assumptions.
+   - Introduce Monte Carlo simulation for propagating uncertainty through oversight thresholds.
+   - Introduce Markov-state reliance modeling for AI use workflows that move through generation, checking, escalation, action, correction, and harm states.
+   - Point technical readers to `docs/numerical-framework.md`.
+
+8. Calibration, noise, and the moving target problem
    - Treat this as a core methodological section.
    - Explain rate/lambda, severity, detectability, reversibility, model improvement, and expert judgment.
 
-8. Governance alignment
+9. Governance alignment
    - Map the framework to NIST AI RMF, NIST Generative AI Profile, EU AI Act high-risk concepts, ISO/IEC 42001 management-system thinking, and incident taxonomy work.
 
-9. Limitations
+10. Limitations
    - No empirical calibration yet.
    - Domain weights are provisional.
    - Error rates are difficult to estimate.
    - The project is not legal, medical, financial, safety, or compliance advice.
 
-10. Research and builder agenda
+11. Research and builder agenda
    - Invite calibration, domain testing, alternative scenario classifiers, richer datasets, and validation against real or documented outcomes.
 
-11. Technical appendix
+12. Technical appendix
    - Formula, parameters, examples, saturation issue, and proposed next-generation rubric.
 
 ## Methodological Stance
 
 ADD is an inspectable oversight triage framework, not an oracle.
+
+Its technical foundation should combine three methods:
+
+1. Bayesian calibration
+   - Use priors to represent initial assumptions about error rates, severity, detectability, reversibility, verification burden, and domain complexity.
+   - Update those assumptions as documented cases, expert review, incident data, model evaluations, and deployment evidence become available.
+   - Treat expert judgment as evidence with uncertainty, not as unquestionable truth.
+
+2. Monte Carlo uncertainty propagation
+   - Sample plausible parameter ranges rather than relying on single-point estimates.
+   - Estimate how often a scenario crosses oversight thresholds under conservative, moderate, and permissive assumptions.
+   - Report uncertainty bands and threshold-crossing probabilities rather than only point scores.
+
+3. Markov reliance workflow modeling
+   - Model AI-assisted work as a sequence of states, not a one-time score.
+   - Core states should include at least: AI use proposed, AI output generated, non-expert acceptance, non-expert checking, expert review, error detected/corrected, action taken, harmless outcome, and realized harm/loss.
+   - Transition probabilities should depend on model reliability, domain complexity, user expertise, detectability, reversibility, and governance controls.
+   - The Markov layer is core because ADD is about reliance pathways: whether a system tends toward unchecked action or toward verification, escalation, correction, and safer outcomes.
 
 The weights and parameters are provisional. They should be versioned, challenged, and tuned through a combination of:
 
@@ -115,6 +145,21 @@ The framework should distinguish:
 - Model drift/improvement: whether assumptions remain current.
 
 The paper should explicitly note that human judgment is necessary but noisy. People can overpredict dramatic negative events, especially when examples are recent, vivid, or socially amplified. Incident anecdotes should inform calibration but should not dominate it. The framework should use ranges, confidence labels, sensitivity analysis, and expert review rather than pretending fear is evidence.
+
+## Numerical Framework Document
+
+`docs/numerical-framework.md` should be written for the technical secondary audience. It should include:
+
+- a plain-language overview of why Bayesian, Monte Carlo, and Markov methods are all used;
+- a proposed parameter set and prior assumptions;
+- example distributions for rate/lambda, severity, detectability, and reversibility;
+- a simple threshold-crossing simulation structure;
+- a Markov state diagram or table for reliance workflows;
+- example transition probability logic;
+- example outputs such as probability of expert-review threshold crossing, probability of unverified action, and probability of realized harm/loss;
+- warnings about over-calibration, false precision, sparse evidence, and moving model capabilities.
+
+The document should not require a complete implementation in this first pass. It should define the numerical foundation clearly enough that future code can implement it.
 
 ## Good-Enough Standard
 
@@ -169,6 +214,7 @@ The first pass is successful if:
 - the repository contains a coherent whitepaper and supporting docs,
 - the README points readers to the paper without overclaiming,
 - the model is described as provisional and falsifiable,
+- Bayesian, Monte Carlo, and Markov methods are included as core numerical foundations,
 - calibration and tuning uncertainty are treated as central,
 - governance readers can understand why the framework matters,
 - technical readers can see how to improve or challenge it.
