@@ -61,7 +61,7 @@ E_required = E_min
            + beta_i * (harm * complexity * error_uncertainty)^alpha_i
 ```
 
-This formula is inspectable and intended to become testable once variables, thresholds, calibration data, and validation cases are specified. It is not a final scientific model, and it should not be treated as an objective detector of safety or danger.
+This formula is inspectable and intended to become testable once variables, thresholds, calibration data, and validation cases are specified. It is not a final scientific model, and it should not be treated as an authoritative safety judgment.
 
 The planned numerical layer will combine Bayesian calibration, Monte Carlo uncertainty propagation, and Markov reliance workflow modeling.
 
