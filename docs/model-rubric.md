@@ -10,6 +10,8 @@ This rubric defines the factors ADD uses to estimate the level of human expertis
 
 ADD treats risk as a practical oversight question: what kind of human review is needed before an AI-assisted output is used? The factors below are ordinal prompts for judgment. They should be applied conservatively when evidence is limited, users are non-experts, or consequences are hard to reverse.
 
+For harm, complexity, uncertainty, low detectability, low reversibility, and verification burden, higher levels generally increase oversight need. User expertise and governance controls are protective factors: weak user expertise or weak controls increase oversight need, while strong expertise or controls may reduce residual risk but do not make high-harm uses safe by default.
+
 | Factor | Meaning | Low | Moderate | High |
 | --- | --- | --- | --- | --- |
 | Harm/loss potential | Consequence if the AI output is wrong or misused | Annoyance or minor rework | Meaningful cost, delay, health, legal, educational, or financial consequence | Severe, irreversible, regulated, safety-critical, or rights-impacting consequence |
@@ -49,7 +51,7 @@ Moderate harm with non-expert users should usually escalate to at least Band 3, 
 | --- | --- | --- |
 | Creative brainstorming for a personal story | Band 1: Casual/Exploratory | The likely downside is annoyance, wasted time, or poor creative fit. Ordinary user judgment is usually enough. |
 | Summarizing public meeting notes | Band 2: Assisted/Bounded, or Band 3: Trained Review Required | Internal preparation may be bounded use. Publication, official records, or decisions based on the summary raise consequences and review needs. |
-| Flu symptom advice for personal concern | Band 3: Trained Review Required, or professional consultation before action if symptoms are serious | Basic information may help prepare questions, but worsening, severe, unusual, or high-risk symptoms should be handled through qualified medical advice. |
+| Flu symptom advice for personal concern | Band 2: Assisted/Bounded, Band 3: Trained Review Required, or qualified medical care depending on urgency | General symptom education may be bounded assistance for preparing questions. Triage, diagnosis, treatment choices, severe or worsening symptoms, vulnerable patients, or uncertainty about urgency should escalate to qualified medical care; AI should not be final authority. |
 | Legal contract interpretation | Band 4: Expert Review Required | Legal meaning depends on jurisdiction, facts, drafting context, and consequences. AI may help organize questions, but a legal expert should review before action. |
 | Financial trading recommendation | Band 5: Expert-Led or No Autonomous Use | Loss potential, uncertainty, and incentive-sensitive dynamics make autonomous AI-driven trading advice inappropriate for ordinary use. |
 | Statistical analysis for policy or business decision | Band 3: Trained Review Required, or Band 4: Expert Review Required | Routine internal analysis may need trained review. Decisions with large financial, public, rights, employment, or safety consequences should escalate to expert review. |
