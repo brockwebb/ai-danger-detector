@@ -286,6 +286,12 @@ The first backend implementation should create:
 
 This should come before a GUI or end-user workflow. The immediate goal is to make ADD's evidence base inspectable, testable, and flexible enough to survive better data.
 
+## Reference Implementation
+
+The first backend evidence implementation lives in `core_model/evidence_schema.py`, `core_model/source_registry.py`, and `core_model/performance_metrics.py`.
+
+It does not yet collect real evidence or tune model weights. Its purpose is to define the typed records, source lifecycle behavior, and metric calculations that future calibration runs will need.
+
 ## Open Research Questions
 
 - Which evidence types best predict oversight requirement rather than merely documenting harm after the fact?
