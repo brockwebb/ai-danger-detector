@@ -4,7 +4,7 @@ import json
 from enum import Enum
 from json import JSONDecodeError
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 from .evidence_corpus import EvidenceCorpus
 from .evidence_schema import (
@@ -126,3 +126,127 @@ def load_source_registry(path: str | Path) -> SourceRegistry:
     for entry in _load_json_array(path):
         _add_source_entry(registry, entry, path=path)
     return registry
+
+
+def _evidence_unit_from_dict(
+    entry: dict[str, Any],
+    *,
+    path: str | Path,
+    line_number: int,
+) -> EvidenceUnit:
+    try:
+        return EvidenceUnit(
+            evidence_id=entry["evidence_id"],
+            source_id=entry["source_id"],
+            evidence_type=_coerce_enum(
+                EvidenceType,
+                entry["evidence_type"],
+                "evidence_type",
+                path=path,
+                line_number=line_number,
+            ),
+            collection_date=entry["collection_date"],
+            event_date=entry.get("event_date"),
+            domain=entry["domain"],
+            task_type=entry["task_type"],
+            model_family=entry["model_family"],
+            model_version=entry["model_version"],
+            user_expertise=_coerce_enum(
+                UserExpertise,
+                entry["user_expertise"],
+                "user_expertise",
+                path=path,
+                line_number=line_number,
+            ),
+            governance_context=entry["governance_context"],
+            outcome_label=_coerce_enum(
+                OutcomeLabel,
+                entry["outcome_label"],
+                "outcome_label",
+                path=path,
+                line_number=line_number,
+            ),
+            oversight_label=_coerce_enum(
+                OversightLabel,
+                entry["oversight_label"],
+                "oversight_label",
+                path=path,
+                line_number=line_number,
+            ),
+            harm_severity=entry["harm_severity"],
+            detectability=entry["detectability"],
+            reversibility=entry["reversibility"],
+            verification_burden=entry["verification_burden"],
+            workflow_path=entry.get("workflow_path", ()),
+            confidence=entry.get("confidence", 0.5),
+            source_quality=_coerce_enum(
+                EvidenceQualityTier,
+                entry.get("source_quality", "tier_3"),
+                "source_quality",
+                path=path,
+                line_number=line_number,
+            ),
+            bias_notes=entry.get("bias_notes", ()),
+            relevance_limits=entry.get("relevance_limits", ()),
+            optional_fields=entry.get("optional_fields", {}),
+        )
+    except KeyError as exc:
+        raise EvidenceLoadError(
+            f"missing evidence field: {exc.args[0]}",
+            path=path,
+            line_number=line_number,
+        ) from exc
+    except ValueError as exc:
+        if isinstance(exc, EvidenceLoadError):
+            raise
+        raise EvidenceLoadError(str(exc), path=path, line_number=line_number) from exc
+
+
+def _iter_evidence_units(path: str | Path) -> Iterable[tuple[int, EvidenceUnit]]:
+    path = Path(path)
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError as exc:
+        raise EvidenceLoadError(str(exc), path=path) from exc
+
+    for line_number, line in enumerate(lines, start=1):
+        if not line.strip():
+            continue
+        try:
+            loaded = json.loads(line)
+        except JSONDecodeError as exc:
+            raise EvidenceLoadError(
+                exc.msg,
+                path=path,
+                line_number=line_number,
+            ) from exc
+        if not isinstance(loaded, dict):
+            raise EvidenceLoadError(
+                "expected evidence line to be an object",
+                path=path,
+                line_number=line_number,
+            )
+        yield line_number, _evidence_unit_from_dict(
+            loaded,
+            path=path,
+            line_number=line_number,
+        )
+
+
+def load_evidence_units(path: str | Path) -> tuple[EvidenceUnit, ...]:
+    return tuple(unit for _, unit in _iter_evidence_units(path))
+
+
+def load_corpus(source_path: str | Path, evidence_path: str | Path) -> EvidenceCorpus:
+    registry = load_source_registry(source_path)
+    corpus = EvidenceCorpus(registry)
+    for line_number, unit in _iter_evidence_units(evidence_path):
+        try:
+            corpus.add(unit)
+        except (KeyError, ValueError) as exc:
+            raise EvidenceLoadError(
+                str(exc),
+                path=evidence_path,
+                line_number=line_number,
+            ) from exc
+    return corpus

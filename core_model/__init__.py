@@ -9,6 +9,12 @@ from .evidence_schema import (
     UserExpertise,
 )
 from .evidence_corpus import DataSnapshot, EvidenceCorpus, EvidenceSplit
+from .evidence_io import (
+    EvidenceLoadError,
+    load_corpus,
+    load_evidence_units,
+    load_source_registry,
+)
 
 from .numerical_framework import (
     DistributionSpec,
@@ -46,6 +52,7 @@ __all__ = [
     "DataSnapshot",
     "EvidenceSource",
     "EvidenceCorpus",
+    "EvidenceLoadError",
     "EvidenceSplit",
     "EvidenceQualityTier",
     "EvidenceType",
@@ -72,6 +79,9 @@ __all__ = [
     "false_reassurance_rate",
     "interval_coverage",
     "log_loss",
+    "load_corpus",
+    "load_evidence_units",
+    "load_source_registry",
     "run_monte_carlo",
     "summarize_simulation",
     "validate_transition_matrix",
