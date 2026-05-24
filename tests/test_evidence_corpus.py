@@ -81,3 +81,100 @@ def test_corpus_rejects_duplicate_evidence_id():
 
     with pytest.raises(ValueError, match="already exists"):
         corpus.add(_evidence())
+
+
+def _registry_with_mixed_sources():
+    registry = _registry()
+    registry.add_source(
+        source_id="src-experimental",
+        source_name="Experimental incident feed",
+        source_type=SourceType.INCIDENT_REPOSITORY,
+        owner_or_publisher="ADD",
+        license_or_access="public",
+        update_cadence="periodic",
+        coverage=("software",),
+        known_biases=("severity bias",),
+        quality_tier=EvidenceQualityTier.TIER_3,
+    )
+    registry.add_source(
+        source_id="src-quarantined",
+        source_name="Quarantined feed",
+        source_type=SourceType.INCIDENT_REPOSITORY,
+        owner_or_publisher="ADD",
+        license_or_access="public",
+        update_cadence="periodic",
+        coverage=("finance",),
+        known_biases=("duplication",),
+        quality_tier=EvidenceQualityTier.TIER_4,
+    )
+    registry.update_status(
+        "src-quarantined", SourceStatus.QUARANTINED, reason="unstable labels"
+    )
+    return registry
+
+
+def test_calibration_evidence_excludes_experimental_sources_by_default():
+    corpus = EvidenceCorpus(_registry_with_mixed_sources())
+    corpus.add(_evidence("case-001", "src-active"))
+    corpus.add(_evidence("case-002", "src-experimental", domain="software"))
+
+    assert [unit.evidence_id for unit in corpus.calibration_evidence()] == ["case-001"]
+    assert [
+        unit.evidence_id
+        for unit in corpus.calibration_evidence(include_experimental=True)
+    ] == [
+        "case-001",
+        "case-002",
+    ]
+
+
+def test_calibration_evidence_excludes_quarantined_sources_and_records():
+    corpus = EvidenceCorpus(_registry_with_mixed_sources())
+    corpus.add(_evidence("case-001", "src-active"))
+    corpus.add(_evidence("case-002", "src-quarantined", domain="finance"))
+    corpus.add(
+        _evidence(
+            "case-003",
+            "src-active",
+            source_quality=EvidenceQualityTier.QUARANTINED,
+        )
+    )
+
+    assert [unit.evidence_id for unit in corpus.calibration_evidence()] == ["case-001"]
+
+
+def test_feature_rows_include_source_traceability():
+    corpus = EvidenceCorpus(_registry())
+    corpus.add(_evidence())
+
+    rows = corpus.feature_rows()
+
+    assert rows[0]["evidence_id"] == "case-001"
+    assert rows[0]["source_id"] == "src-active"
+    assert rows[0]["source_status"] == "active"
+    assert rows[0]["source_type"] == "case_set"
+    assert rows[0]["registry_quality_tier"] == "tier_1"
+
+
+def test_coverage_summary_counts_core_dimensions():
+    corpus = EvidenceCorpus(_registry_with_mixed_sources())
+    corpus.add(_evidence("case-001", "src-active", domain="health", task_type="triage"))
+    corpus.add(
+        _evidence(
+            "case-002",
+            "src-experimental",
+            domain="software",
+            task_type="code review",
+            evidence_type=EvidenceType.INCIDENT,
+            source_quality=EvidenceQualityTier.TIER_3,
+        )
+    )
+
+    summary = corpus.coverage_summary()
+
+    assert summary["by_domain"] == {"health": 1, "software": 1}
+    assert summary["by_task_type"] == {"code review": 1, "triage": 1}
+    assert summary["by_source_id"] == {"src-active": 1, "src-experimental": 1}
+    assert summary["by_evidence_type"] == {"case_review": 1, "incident": 1}
+    assert summary["by_quality_tier"] == {"tier_1": 1, "tier_3": 1}
+    assert summary["by_source_status"] == {"active": 1, "experimental": 1}
