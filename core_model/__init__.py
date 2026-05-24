@@ -1,8 +1,5 @@
-"""
-Core model module for expertise-harm relationship modeling.
-"""
+"""Active AI Danger Detector numerical framework API."""
 
-from .model_definition import expertise_required
-from .domain_profiles import domain_profiles
+from .numerical_framework import MarkovState, validate_transition_matrix
 
-__all__ = ['expertise_required', 'domain_profiles']
+__all__ = ["MarkovState", "validate_transition_matrix"]
