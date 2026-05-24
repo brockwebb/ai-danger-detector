@@ -24,9 +24,17 @@ from .numerical_framework import (
     summarize_simulation,
     validate_transition_matrix,
 )
+from .source_registry import (
+    EvidenceSource,
+    SourceAuditEvent,
+    SourceRegistry,
+    SourceStatus,
+    SourceType,
+)
 
 __all__ = [
     "DistributionSpec",
+    "EvidenceSource",
     "EvidenceQualityTier",
     "EvidenceType",
     "EvidenceUnit",
@@ -37,6 +45,10 @@ __all__ = [
     "SampledScenario",
     "SimulationConfig",
     "SimulationResult",
+    "SourceAuditEvent",
+    "SourceRegistry",
+    "SourceStatus",
+    "SourceType",
     "UserExpertise",
     "WorkflowResult",
     "build_transition_matrix",
