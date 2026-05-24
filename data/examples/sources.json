@@ -1,0 +1,14 @@
+[
+  {
+    "source_id": "src-illustrative-add-cases",
+    "source_name": "Illustrative ADD synthetic cases",
+    "source_type": "synthetic",
+    "owner_or_publisher": "ADD project",
+    "license_or_access": "repository example",
+    "update_cadence": "one-time",
+    "coverage": ["creative", "education", "finance", "health", "law", "software"],
+    "known_biases": ["fictional examples", "not representative", "not calibrated"],
+    "quality_tier": "tier_4",
+    "status": "experimental"
+  }
+]
