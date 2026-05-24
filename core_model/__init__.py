@@ -1,4 +1,13 @@
-"""Active AI Danger Detector numerical framework API."""
+"""Active AI Danger Detector backend API."""
+
+from .evidence_schema import (
+    EvidenceQualityTier,
+    EvidenceType,
+    EvidenceUnit,
+    OutcomeLabel,
+    OversightLabel,
+    UserExpertise,
+)
 
 from .numerical_framework import (
     DistributionSpec,
@@ -18,11 +27,17 @@ from .numerical_framework import (
 
 __all__ = [
     "DistributionSpec",
+    "EvidenceQualityTier",
+    "EvidenceType",
+    "EvidenceUnit",
     "MarkovState",
+    "OutcomeLabel",
+    "OversightLabel",
     "ScenarioSpec",
     "SampledScenario",
     "SimulationConfig",
     "SimulationResult",
+    "UserExpertise",
     "WorkflowResult",
     "build_transition_matrix",
     "calculate_oversight_score",
