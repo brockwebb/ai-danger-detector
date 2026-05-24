@@ -1,7 +1,11 @@
 import pytest
+import numpy as np
 
 from core_model.numerical_framework import (
+    DistributionSpec,
     MarkovState,
+    ScenarioSpec,
+    build_transition_matrix,
     evaluate_markov_workflow,
     validate_transition_matrix,
 )
@@ -83,3 +87,40 @@ def test_evaluate_markov_workflow_tracks_probability_of_unverified_action_path()
     result = evaluate_markov_workflow(_valid_matrix())
 
     assert result.unverified_action_probability == pytest.approx(0.2247191011)
+
+
+def test_distribution_spec_samples_fixed_beta_triangular_and_lognormal_values():
+    rng = np.random.default_rng(123)
+
+    fixed = DistributionSpec.fixed(0.4).sample(rng, 4)
+    beta = DistributionSpec.beta(alpha=2, beta=5).sample(rng, 200)
+    triangular = DistributionSpec.triangular(left=0.1, mode=0.3, right=0.9).sample(
+        rng, 200
+    )
+    lognormal = DistributionSpec.lognormal(mean=1.0, sigma=0.25).sample(rng, 200)
+
+    assert fixed.tolist() == [0.4, 0.4, 0.4, 0.4]
+    assert beta.min() >= 0.0
+    assert beta.max() <= 1.0
+    assert triangular.min() >= 0.1
+    assert triangular.max() <= 0.9
+    assert lognormal.min() > 0.0
+
+
+def test_build_transition_matrix_uses_scenario_values_to_create_valid_matrix():
+    scenario = ScenarioSpec(
+        error_probability=DistributionSpec.fixed(0.2),
+        severity=DistributionSpec.fixed(0.7),
+        detectability=DistributionSpec.fixed(0.6),
+        reversibility=DistributionSpec.fixed(0.5),
+        verification_burden=DistributionSpec.fixed(0.8),
+        governance_strength=DistributionSpec.fixed(0.7),
+        conditional_loss=DistributionSpec.fixed(1000.0),
+    )
+
+    sampled = scenario.sample(np.random.default_rng(123))
+    matrix = build_transition_matrix(sampled)
+    normalized = validate_transition_matrix(matrix)
+
+    assert normalized[MarkovState.S0][MarkovState.S1] == pytest.approx(1.0)
+    assert normalized[MarkovState.S6][MarkovState.S8] > 0.0
