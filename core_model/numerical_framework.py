@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from enum import Enum
 from typing import Mapping
+
+import numpy as np
 
 
 class MarkovState(str, Enum):
@@ -18,6 +21,12 @@ class MarkovState(str, Enum):
 
 TransitionMatrix = dict[MarkovState, dict[MarkovState, float]]
 TERMINAL_STATES = (MarkovState.S7, MarkovState.S8)
+
+
+@dataclass(frozen=True)
+class WorkflowResult:
+    terminal_probabilities: dict[MarkovState, float]
+    unverified_action_probability: float
 
 
 def _coerce_state(value: MarkovState | str) -> MarkovState:
@@ -65,3 +74,80 @@ def validate_transition_matrix(
             )
 
     return normalized
+
+
+def _hitting_probability(
+    matrix: TransitionMatrix,
+    *,
+    start_state: MarkovState,
+    hit_state: MarkovState,
+) -> float:
+    absorbing = set(TERMINAL_STATES) | {hit_state}
+    transient_states = [state for state in MarkovState if state not in absorbing]
+    index = {state: position for position, state in enumerate(transient_states)}
+
+    if start_state == hit_state:
+        return 1.0
+    if start_state in TERMINAL_STATES:
+        return 0.0
+
+    q = np.zeros((len(transient_states), len(transient_states)))
+    r = np.zeros(len(transient_states))
+
+    for from_state in transient_states:
+        row = index[from_state]
+        for to_state, probability in matrix[from_state].items():
+            if to_state == hit_state:
+                r[row] += probability
+            elif to_state in index:
+                q[row, index[to_state]] += probability
+
+    solution = np.linalg.solve(np.eye(len(transient_states)) - q, r)
+    return float(solution[index[start_state]])
+
+
+def evaluate_markov_workflow(
+    matrix: Mapping[MarkovState | str, Mapping[MarkovState | str, float]],
+    *,
+    start_state: MarkovState | str = MarkovState.S0,
+) -> WorkflowResult:
+    normalized = validate_transition_matrix(matrix)
+    start = _coerce_state(start_state)
+    transient_states = [state for state in MarkovState if state not in TERMINAL_STATES]
+    terminal_states = list(TERMINAL_STATES)
+    transient_index = {state: position for position, state in enumerate(transient_states)}
+    terminal_index = {state: position for position, state in enumerate(terminal_states)}
+
+    if start in terminal_index:
+        terminal_probabilities = {state: 0.0 for state in terminal_states}
+        terminal_probabilities[start] = 1.0
+        return WorkflowResult(
+            terminal_probabilities=terminal_probabilities,
+            unverified_action_probability=0.0,
+        )
+
+    q = np.zeros((len(transient_states), len(transient_states)))
+    r = np.zeros((len(transient_states), len(terminal_states)))
+
+    for from_state in transient_states:
+        row = transient_index[from_state]
+        for to_state, probability in normalized[from_state].items():
+            if to_state in terminal_index:
+                r[row, terminal_index[to_state]] += probability
+            else:
+                q[row, transient_index[to_state]] += probability
+
+    absorption = np.linalg.solve(np.eye(len(transient_states)) - q, r)
+    terminal_probabilities = {
+        terminal_state: float(absorption[transient_index[start], terminal_index[terminal_state]])
+        for terminal_state in terminal_states
+    }
+
+    return WorkflowResult(
+        terminal_probabilities=terminal_probabilities,
+        unverified_action_probability=_hitting_probability(
+            normalized,
+            start_state=start,
+            hit_state=MarkovState.S2,
+        ),
+    )

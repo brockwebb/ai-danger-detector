@@ -2,6 +2,7 @@ import pytest
 
 from core_model.numerical_framework import (
     MarkovState,
+    evaluate_markov_workflow,
     validate_transition_matrix,
 )
 
@@ -68,3 +69,17 @@ def test_validate_transition_matrix_rejects_row_that_does_not_sum_to_one():
 
     with pytest.raises(ValueError, match="sum to 1"):
         validate_transition_matrix(matrix)
+
+
+def test_evaluate_markov_workflow_returns_terminal_probabilities():
+    result = evaluate_markov_workflow(_valid_matrix())
+
+    assert result.terminal_probabilities[MarkovState.S7] == pytest.approx(0.9494382022)
+    assert result.terminal_probabilities[MarkovState.S8] == pytest.approx(0.0505617978)
+    assert sum(result.terminal_probabilities.values()) == pytest.approx(1.0)
+
+
+def test_evaluate_markov_workflow_tracks_probability_of_unverified_action_path():
+    result = evaluate_markov_workflow(_valid_matrix())
+
+    assert result.unverified_action_probability == pytest.approx(0.2247191011)
