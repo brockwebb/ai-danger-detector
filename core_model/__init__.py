@@ -5,9 +5,14 @@ from .numerical_framework import (
     MarkovState,
     ScenarioSpec,
     SampledScenario,
+    SimulationConfig,
+    SimulationResult,
     WorkflowResult,
     build_transition_matrix,
+    calculate_oversight_score,
     evaluate_markov_workflow,
+    run_monte_carlo,
+    summarize_simulation,
     validate_transition_matrix,
 )
 
@@ -16,8 +21,13 @@ __all__ = [
     "MarkovState",
     "ScenarioSpec",
     "SampledScenario",
+    "SimulationConfig",
+    "SimulationResult",
     "WorkflowResult",
     "build_transition_matrix",
+    "calculate_oversight_score",
     "evaluate_markov_workflow",
+    "run_monte_carlo",
+    "summarize_simulation",
     "validate_transition_matrix",
 ]

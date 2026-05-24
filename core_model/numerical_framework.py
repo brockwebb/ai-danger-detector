@@ -106,6 +106,25 @@ class ScenarioSpec:
         )
 
 
+@dataclass(frozen=True)
+class SimulationConfig:
+    iterations: int = 1000
+    seed: int | None = None
+    trained_review_threshold: float = 0.35
+    expert_review_threshold: float = 0.60
+    expert_led_threshold: float = 0.80
+    interval: tuple[float, float] = (0.05, 0.95)
+
+
+@dataclass(frozen=True)
+class SimulationResult:
+    oversight_scores: np.ndarray
+    realized_harm_probabilities: np.ndarray
+    unverified_action_probabilities: np.ndarray
+    expected_losses: np.ndarray
+    threshold_probabilities: dict[str, float]
+
+
 def _coerce_state(value: MarkovState | str) -> MarkovState:
     try:
         return value if isinstance(value, MarkovState) else MarkovState(value)
@@ -223,6 +242,82 @@ def build_transition_matrix(sampled: SampledScenario) -> TransitionMatrix:
             MarkovState.S8: {MarkovState.S8: 1.0},
         }
     )
+
+
+def calculate_oversight_score(sampled: SampledScenario) -> float:
+    return _clamp_probability(
+        0.22 * _clamp_probability(sampled.error_probability)
+        + 0.25 * _clamp_probability(sampled.severity)
+        + 0.18 * (1.0 - _clamp_probability(sampled.detectability))
+        + 0.15 * (1.0 - _clamp_probability(sampled.reversibility))
+        + 0.15 * _clamp_probability(sampled.verification_burden)
+        + 0.05 * (1.0 - _clamp_probability(sampled.governance_strength))
+    )
+
+
+def run_monte_carlo(
+    scenario: ScenarioSpec, config: SimulationConfig | None = None
+) -> SimulationResult:
+    config = config or SimulationConfig()
+    if config.iterations <= 0:
+        raise ValueError("iterations must be positive")
+
+    rng = np.random.default_rng(config.seed)
+    oversight_scores = np.zeros(config.iterations)
+    realized_harm_probabilities = np.zeros(config.iterations)
+    unverified_action_probabilities = np.zeros(config.iterations)
+    expected_losses = np.zeros(config.iterations)
+
+    for index in range(config.iterations):
+        sampled = scenario.sample(rng)
+        oversight_score = calculate_oversight_score(sampled)
+        workflow = evaluate_markov_workflow(build_transition_matrix(sampled))
+        realized_harm = workflow.terminal_probabilities[MarkovState.S8]
+
+        oversight_scores[index] = oversight_score
+        realized_harm_probabilities[index] = realized_harm
+        unverified_action_probabilities[index] = workflow.unverified_action_probability
+        expected_losses[index] = realized_harm * max(sampled.conditional_loss, 0.0)
+
+    return SimulationResult(
+        oversight_scores=oversight_scores,
+        realized_harm_probabilities=realized_harm_probabilities,
+        unverified_action_probabilities=unverified_action_probabilities,
+        expected_losses=expected_losses,
+        threshold_probabilities={
+            "trained_review_required": float(
+                np.mean(oversight_scores >= config.trained_review_threshold)
+            ),
+            "expert_review_required": float(
+                np.mean(oversight_scores >= config.expert_review_threshold)
+            ),
+            "expert_led_or_no_autonomous_use": float(
+                np.mean(oversight_scores >= config.expert_led_threshold)
+            ),
+        },
+    )
+
+
+def summarize_simulation(
+    result: SimulationResult, *, interval: tuple[float, float] = (0.05, 0.95)
+) -> dict[str, float | tuple[float, float]]:
+    lower, upper = np.quantile(result.oversight_scores, interval)
+    return {
+        "median_oversight_score": float(np.median(result.oversight_scores)),
+        "oversight_score_interval": (float(lower), float(upper)),
+        "p_trained_review_required": result.threshold_probabilities[
+            "trained_review_required"
+        ],
+        "p_expert_review_required": result.threshold_probabilities[
+            "expert_review_required"
+        ],
+        "p_expert_led_or_no_autonomous_use": result.threshold_probabilities[
+            "expert_led_or_no_autonomous_use"
+        ],
+        "p_unverified_action": float(np.mean(result.unverified_action_probabilities)),
+        "p_realized_harm": float(np.mean(result.realized_harm_probabilities)),
+        "expected_loss": float(np.mean(result.expected_losses)),
+    }
 
 
 def _hitting_probability(
