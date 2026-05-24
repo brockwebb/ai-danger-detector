@@ -280,17 +280,19 @@ The first backend implementation should create:
 
 - `core_model/evidence_schema.py` for dataclasses or typed records.
 - `core_model/source_registry.py` for source metadata and active/quarantined status.
+- `core_model/evidence_corpus.py` for calibration filtering, feature rows, coverage summaries, reproducible splits, and data snapshots.
 - `core_model/performance_metrics.py` for calibration, scoring, and false reassurance metrics.
 - `tests/test_evidence_schema.py` for schema validation and quality-tier behavior.
+- `tests/test_evidence_corpus.py` for corpus validation, traceability, splitting, and snapshot behavior.
 - `tests/test_source_registry.py` for source admission, deprecation, and audit trail behavior.
 
 This should come before a GUI or end-user workflow. The immediate goal is to make ADD's evidence base inspectable, testable, and flexible enough to survive better data.
 
 ## Reference Implementation
 
-The first backend evidence implementation lives in `core_model/evidence_schema.py`, `core_model/source_registry.py`, and `core_model/performance_metrics.py`.
+The first backend evidence implementation lives in `core_model/evidence_schema.py`, `core_model/source_registry.py`, `core_model/evidence_corpus.py`, and `core_model/performance_metrics.py`.
 
-It does not yet collect real evidence or tune model weights. Its purpose is to define the typed records, source lifecycle behavior, and metric calculations that future calibration runs will need.
+It does not yet collect real evidence or tune model weights. Its purpose is to define the typed records, source lifecycle behavior, corpus bridge, reproducible snapshot metadata, and metric calculations that future calibration and model-comparison runs will need.
 
 ## Open Research Questions
 

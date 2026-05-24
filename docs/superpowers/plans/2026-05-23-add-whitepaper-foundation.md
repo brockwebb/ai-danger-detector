@@ -635,7 +635,7 @@ Expected: no matches.
 Run:
 
 ```bash
-rg -n "scientifically validated|objective detector|guarantees safety|detects safety|safe to use" README.md docs/whitepaper.md docs/model-rubric.md docs/numerical-framework.md docs/validation-agenda.md || true
+rg -n "scientifically[ ]validated|objective[ ]detector|guarantees[ ]safety|detects[ ]safety|safe[ ]to[ ]use" README.md docs/whitepaper.md docs/model-rubric.md docs/numerical-framework.md docs/validation-agenda.md || true
 ```
 
 Expected: no matches.

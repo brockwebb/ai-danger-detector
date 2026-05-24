@@ -812,7 +812,7 @@ Run:
 
 ```bash
 .venv/bin/python -m pytest -v
-rg -n "scientifically validated|objective detector|guarantees safety|safe to use|tick|deer|acorn|forest" README.md docs core_model tests || true
+rg -n "scientifically[ ]validated|objective[ ]detector|guarantees[ ]safety|safe[ ]to[ ]use|t[i]ck|d[e]er|a[c]orn|f[o]rest" README.md docs core_model tests || true
 git status --short --branch
 ```
 

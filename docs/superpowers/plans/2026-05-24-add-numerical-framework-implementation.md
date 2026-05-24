@@ -986,7 +986,7 @@ Run:
 
 ```bash
 .venv/bin/python -m pytest -v
-rg -n "scientifically validated|objective detector|guarantees safety|safe to use|strict MCMC" README.md docs core_model tests archive || true
+rg -n "scientifically[ ]validated|objective[ ]detector|guarantees[ ]safety|safe[ ]to[ ]use|strict MCMC" README.md docs core_model tests archive || true
 git status --short --branch
 ```
 
