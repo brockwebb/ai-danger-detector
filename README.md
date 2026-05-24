@@ -10,6 +10,7 @@ The project began as a simple expertise-risk calculator. It is evolving into an 
 - [Model Rubric](docs/model-rubric.md)
 - [Numerical Framework](docs/numerical-framework.md)
 - [Evidence Data Architecture](docs/evidence-data-architecture.md)
+- [Adjudication Protocol](docs/adjudication-protocol.md)
 - [Validation Agenda](docs/validation-agenda.md)
 
 ## Status
@@ -49,7 +50,11 @@ AI-Danger-Detector/
 |   |-- model-rubric.md             # Scenario factors and oversight categories
 |   |-- numerical-framework.md      # Mathematical foundation for modeling
 |   |-- evidence-data-architecture.md # Evidence and calibration data architecture
+|   |-- adjudication-protocol.md    # Case review and evidence labeling protocol
 |   `-- validation-agenda.md        # Calibration and validation work needed
+|
+|-- data/
+|   `-- examples/                   # Synthetic corpus for loader/schema examples
 |
 |-- core_model/
 |   |-- __init__.py                 # Active API exports
@@ -64,6 +69,7 @@ AI-Danger-Detector/
 |   |-- test_evidence_schema.py     # Evidence record tests
 |   |-- test_evidence_corpus.py     # Evidence corpus tests
 |   |-- test_evidence_io.py         # Evidence data loading tests
+|   |-- test_example_corpus.py      # Example corpus loading tests
 |   |-- test_source_registry.py     # Source registry tests
 |   |-- test_performance_metrics.py # Metric tests
 |   `-- test_numerical_framework.py # Numerical framework tests

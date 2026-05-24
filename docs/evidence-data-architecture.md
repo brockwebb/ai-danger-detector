@@ -242,6 +242,8 @@ Removal should preserve an audit trail. Do not silently delete sources from hist
 
 ADD should avoid evaluating models on the same evidence used to tune them.
 
+Case labels used for development, calibration, or validation should follow the adjudication process in `docs/adjudication-protocol.md`. That protocol defines reviewer roles, label anchors, disagreement handling, quality tiers, and calibration eligibility gates.
+
 Recommended splits:
 
 - Retrospective development set for early model building.
@@ -283,18 +285,23 @@ The first backend implementation should create:
 - `core_model/evidence_corpus.py` for calibration filtering, feature rows, coverage summaries, reproducible splits, and data snapshots.
 - `core_model/evidence_io.py` for loading local source registry JSON and evidence JSONL into the corpus.
 - `core_model/performance_metrics.py` for calibration, scoring, and false reassurance metrics.
+- `docs/adjudication-protocol.md` for the case review and evidence labeling protocol.
+- `data/examples/` for a synthetic example corpus that demonstrates file format and loader behavior.
 - `tests/test_evidence_schema.py` for schema validation and quality-tier behavior.
 - `tests/test_evidence_corpus.py` for corpus validation, traceability, splitting, and snapshot behavior.
 - `tests/test_evidence_io.py` for local data loading and load-error context.
+- `tests/test_example_corpus.py` for example corpus loading and calibration-exclusion behavior.
 - `tests/test_source_registry.py` for source admission, deprecation, and audit trail behavior.
 
 This should come before a GUI or end-user workflow. The immediate goal is to make ADD's evidence base inspectable, testable, and flexible enough to survive better data.
 
 ## Reference Implementation
 
-The first backend evidence implementation lives in `core_model/evidence_schema.py`, `core_model/source_registry.py`, `core_model/evidence_corpus.py`, `core_model/evidence_io.py`, and `core_model/performance_metrics.py`.
+The first backend evidence implementation lives in `core_model/evidence_schema.py`, `core_model/source_registry.py`, `core_model/evidence_corpus.py`, `core_model/evidence_io.py`, and `core_model/performance_metrics.py`, supported by `docs/adjudication-protocol.md`.
 
-It does not yet collect real evidence or tune model weights. Its purpose is to define the typed records, source lifecycle behavior, corpus bridge, local file-backed loading path, reproducible snapshot metadata, and metric calculations that future calibration and model-comparison runs will need.
+It does not yet collect real evidence or tune model weights. Its purpose is to define the typed records, source lifecycle behavior, corpus bridge, local file-backed loading path, adjudication process, reproducible snapshot metadata, and metric calculations that future calibration and model-comparison runs will need.
+
+The example corpus in `data/examples/` is synthetic. It is useful for testing and documentation, but it is marked experimental and excluded from calibration by default.
 
 ## Open Research Questions
 
