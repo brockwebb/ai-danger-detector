@@ -178,3 +178,50 @@ def test_coverage_summary_counts_core_dimensions():
     assert summary["by_evidence_type"] == {"case_review": 1, "incident": 1}
     assert summary["by_quality_tier"] == {"tier_1": 1, "tier_3": 1}
     assert summary["by_source_status"] == {"active": 1, "experimental": 1}
+
+
+def test_create_split_is_deterministic_for_same_seed():
+    corpus = EvidenceCorpus(_registry())
+    for index in range(10):
+        corpus.add(_evidence(f"case-{index:03d}", "src-active"))
+
+    first = corpus.create_split(
+        seed=42, train_ratio=0.6, calibration_ratio=0.2, holdout_ratio=0.2
+    )
+    second = corpus.create_split(
+        seed=42, train_ratio=0.6, calibration_ratio=0.2, holdout_ratio=0.2
+    )
+
+    assert first == second
+    assert len(first.train_ids) == 6
+    assert len(first.calibration_ids) == 2
+    assert len(first.holdout_ids) == 2
+
+
+def test_create_split_rejects_invalid_ratios():
+    corpus = EvidenceCorpus(_registry())
+    corpus.add(_evidence())
+
+    with pytest.raises(ValueError, match="sum to 1"):
+        corpus.create_split(
+            seed=42, train_ratio=0.5, calibration_ratio=0.2, holdout_ratio=0.2
+        )
+
+
+def test_data_snapshot_records_version_and_inclusion_metadata():
+    corpus = EvidenceCorpus(_registry())
+    corpus.add(_evidence())
+
+    snapshot = corpus.create_snapshot(
+        snapshot_id="snapshot-001",
+        schema_version="schema-v1",
+        source_registry_version="sources-v1",
+        feature_transformation_version="features-v1",
+        created_date="2026-05-24",
+    )
+
+    assert snapshot.evidence_count == 1
+    assert snapshot.source_count == 1
+    assert snapshot.included_evidence_ids == ("case-001",)
+    assert snapshot.included_source_ids == ("src-active",)
+    assert snapshot.to_dict()["snapshot_id"] == "snapshot-001"
