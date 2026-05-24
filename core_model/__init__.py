@@ -8,6 +8,7 @@ from .evidence_schema import (
     OversightLabel,
     UserExpertise,
 )
+from .evidence_corpus import EvidenceCorpus
 
 from .numerical_framework import (
     DistributionSpec,
@@ -43,6 +44,7 @@ from .source_registry import (
 __all__ = [
     "DistributionSpec",
     "EvidenceSource",
+    "EvidenceCorpus",
     "EvidenceQualityTier",
     "EvidenceType",
     "EvidenceUnit",
