@@ -24,6 +24,14 @@ from .numerical_framework import (
     summarize_simulation,
     validate_transition_matrix,
 )
+from .performance_metrics import (
+    brier_score,
+    expected_calibration_error,
+    false_escalation_rate,
+    false_reassurance_rate,
+    interval_coverage,
+    log_loss,
+)
 from .source_registry import (
     EvidenceSource,
     SourceAuditEvent,
@@ -52,8 +60,14 @@ __all__ = [
     "UserExpertise",
     "WorkflowResult",
     "build_transition_matrix",
+    "brier_score",
     "calculate_oversight_score",
     "evaluate_markov_workflow",
+    "expected_calibration_error",
+    "false_escalation_rate",
+    "false_reassurance_rate",
+    "interval_coverage",
+    "log_loss",
     "run_monte_carlo",
     "summarize_simulation",
     "validate_transition_matrix",
