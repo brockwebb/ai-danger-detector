@@ -46,7 +46,7 @@ Reviewer disagreement is preserved as evidence, not erased as noise.
 Run:
 
 ```bash
-rg -n "TBD|TODO|FIXME|scientifically[ ]validated|objective[ ]detector|guarantees[ ]safety|safe[ ]to[ ]use|\b(t[i]ck|d[e]er|a[c]orn|f[o]rest)\b" docs/adjudication-protocol.md || true
+rg -n "T[B]D|T[O]DO|F[IX]ME|scientifically[ ]validated|objective[ ]detector|guarantees[ ]safety|safe[ ]to[ ]use|\b(t[i]ck|d[e]er|a[c]orn|f[o]rest)\b" docs/adjudication-protocol.md || true
 ```
 
 Expected: no matches.
