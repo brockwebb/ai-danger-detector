@@ -9,6 +9,7 @@ The project began as a simple expertise-risk calculator. It is evolving into an 
 - [Whitepaper](docs/whitepaper.md)
 - [Model Rubric](docs/model-rubric.md)
 - [Numerical Framework](docs/numerical-framework.md)
+- [Evidence Data Architecture](docs/evidence-data-architecture.md)
 - [Validation Agenda](docs/validation-agenda.md)
 
 ## Status
@@ -47,6 +48,7 @@ AI-Danger-Detector/
 |   |-- whitepaper.md               # Governance argument and framework overview
 |   |-- model-rubric.md             # Scenario factors and oversight categories
 |   |-- numerical-framework.md      # Mathematical foundation for modeling
+|   |-- evidence-data-architecture.md # Evidence and calibration data architecture
 |   `-- validation-agenda.md        # Calibration and validation work needed
 |
 |-- core_model/
