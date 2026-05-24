@@ -2,7 +2,7 @@
 
 AI Danger Detector is a prototype framework for estimating when AI-assisted work requires human expertise, trained review, expert oversight, or restraint.
 
-The project began as a simple expertise-risk calculator. It is evolving into an inspectable oversight triage framework: part governance argument, part model rubric, and part numerical foundation for future simulation and validation.
+The project began as a simple expertise-risk calculator. It is evolving into an inspectable oversight triage framework: part governance argument, part model rubric, and part numerical foundation for simulation and validation work.
 
 ## Current Foundation
 
@@ -13,7 +13,7 @@ The project began as a simple expertise-risk calculator. It is evolving into an 
 
 ## Status
 
-This is not a validated safety, medical, legal, financial, or compliance tool. The current Python code is an early prototype. The whitepaper and supporting docs define the intended framework and the calibration work needed before stronger claims would be justified.
+This is not a validated safety, medical, legal, financial, or compliance tool. The active Python code is a first reference implementation of the numerical framework, not an empirically calibrated instrument. The whitepaper and supporting docs define the calibration work needed before stronger claims would be justified.
 
 ## What is AI Danger Detector?
 
@@ -32,11 +32,11 @@ AI systems can be useful across everyday and high-stakes work, but the appropria
 
 ADD is being developed to make those distinctions inspectable. The current goal is to clarify what would need to be measured, reviewed, and validated before an AI-assisted task could be treated as lower risk.
 
-## Current Prototype
+## Current Implementation
 
-The existing Python code is an early calculator and exploration environment. It is useful for inspecting assumptions and experimenting with parameter sensitivity, but it should not be treated as a validated classifier or decision system.
+The active Python implementation lives in `core_model/numerical_framework.py`. It provides a tested reference layer for sampling uncertain assumptions, evaluating a Markov reliance workflow, running Monte Carlo simulations, and summarizing oversight threshold probabilities.
 
-The documentation now defines the intended direction of the project. Future code work should align the prototype with the whitepaper, rubric, numerical framework, and validation agenda.
+Earlier exploratory calculators, scripts, and sensitivity experiments are preserved in `archive/exploratory-prototype/` for historical reference. They are not the active implementation.
 
 ## Project Structure
 
@@ -46,36 +46,24 @@ AI-Danger-Detector/
 |-- docs/
 |   |-- whitepaper.md               # Governance argument and framework overview
 |   |-- model-rubric.md             # Scenario factors and oversight categories
-|   |-- numerical-framework.md      # Mathematical foundation for future modeling
+|   |-- numerical-framework.md      # Mathematical foundation for modeling
 |   `-- validation-agenda.md        # Calibration and validation work needed
 |
 |-- core_model/
-|   |-- model_definition.py         # Early equations, parameters, and prototype logic
-|   `-- domain_profiles.py          # Domain presets and prototype parameter assumptions
+|   |-- __init__.py                 # Active API exports
+|   `-- numerical_framework.py      # Monte Carlo and Markov reference implementation
 |
-|-- model_validation/               # Exploratory model behavior checks
-|   |-- parameter_sensitivity.py    # Parameter sweeps and sensitivity exploration
-|   |-- domain_validation.py        # Domain profile checks
-|   `-- edge_case_testing.py        # Boundary and extreme-case exploration
+|-- tests/
+|   `-- test_numerical_framework.py # Reference implementation tests
 |
-|-- data_generation/
-|   |-- calculator.py               # Single-point expertise calculator
-|   |-- batch_generator.py          # Scenario batch generator
-|   `-- generate_large_dataset.py   # Synthetic datasets for experimentation
+|-- evaluation/
+|   |-- critical_review.md          # Project review
+|   |-- market_landscape.md         # Publishing and landscape notes
+|   |-- refresh_plan.md             # Recommended refresh path
+|   `-- technical_health_check.md   # Codebase health review
 |
-|-- visualization/
-|   |-- plotting.py                 # Core visualization functions
-|   `-- domain_comparisons.py       # Domain comparison visualizations
-|
-|-- machine_learning/
-|   |-- preprocessing.py            # Data preparation experiments
-|   |-- model_training.py           # Predictive model experiments
-|   |-- validation.py               # ML evaluation experiments
-|   `-- interpretability.py         # Feature importance and interpretation experiments
-|
-`-- applications/
-    |-- sensitivity_tool.py         # Parameter sensitivity analyzer
-    `-- interactive_assessment.py   # Early interactive assessment prototype
+`-- archive/
+    `-- exploratory-prototype/      # Historical code, not active implementation
 ```
 
 ## Disclaimer

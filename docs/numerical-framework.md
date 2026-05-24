@@ -6,7 +6,7 @@ Date: 2026-05-23
 
 This document describes the numerical foundation for ADD: Bayesian calibration for uncertain assumptions, Monte Carlo simulation for propagating uncertainty, and Markov reliance workflow modeling for how AI-assisted decisions move through checking, escalation, action, correction, or harm.
 
-The framework is provisional. It defines a structure that future code can implement and test, but it does not claim empirical validity yet.
+The framework is provisional. It now has a first reference implementation, but it does not claim empirical validity yet.
 
 ## Method Overview
 
@@ -17,6 +17,12 @@ ADD uses the three methods together:
 - Markov workflow modeling represents AI reliance as a sequence of states rather than a one-time score.
 
 The point of combining these methods is to make uncertainty visible. ADD should not hide weak evidence behind a single confident score. It should show the range of plausible oversight requirements and the workflow paths that create risk.
+
+## Reference Implementation
+
+The first reference implementation lives in `core_model/numerical_framework.py`. It implements Monte Carlo uncertainty propagation over a Markov reliance workflow model.
+
+This is not strict Markov chain Monte Carlo. The Markov layer models workflow transitions, while Monte Carlo sampling propagates uncertainty in assumptions and records outcome distributions. Full MCMC posterior inference is a possible later calibration method if real-world evidence requires it.
 
 ## Bayesian Calibration
 
