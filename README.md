@@ -36,7 +36,7 @@ ADD is being developed to make those distinctions inspectable. The current goal 
 
 ## Current Implementation
 
-The active Python implementation lives in `core_model/`. It includes the numerical framework plus an evidence backbone for typed evidence records, source registry metadata, corpus management, local data loading, reproducible data snapshots, and calibration-oriented performance metrics.
+The active Python implementation lives in `core_model/`. It includes the numerical framework plus an evidence backbone for typed evidence records, source registry metadata, corpus management, local data loading, reproducible data snapshots, a provisional rubric scorer, an ordinal evaluation runner, and calibration-oriented performance metrics.
 
 Earlier exploratory calculators, scripts, and sensitivity experiments are preserved in `archive/exploratory-prototype/` for historical reference. They are not the active implementation.
 
@@ -63,6 +63,7 @@ AI-Danger-Detector/
 |   |-- evidence_io.py              # Local JSON/JSONL evidence loading
 |   |-- source_registry.py          # Source lifecycle and audit trail metadata
 |   |-- rubric_scorer.py            # Provisional baseline oversight scorer
+|   |-- evaluation_runner.py        # Ordinal scorer evaluation against labels
 |   |-- performance_metrics.py      # Calibration and scoring metrics
 |   `-- numerical_framework.py      # Monte Carlo and Markov reference implementation
 |
@@ -72,6 +73,7 @@ AI-Danger-Detector/
 |   |-- test_evidence_io.py         # Evidence data loading tests
 |   |-- test_example_corpus.py      # Example corpus loading tests
 |   |-- test_rubric_scorer.py       # Baseline scorer tests
+|   |-- test_evaluation_runner.py   # Ordinal evaluation runner tests
 |   |-- test_source_registry.py     # Source registry tests
 |   |-- test_performance_metrics.py # Metric tests
 |   `-- test_numerical_framework.py # Numerical framework tests

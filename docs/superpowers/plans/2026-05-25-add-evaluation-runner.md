@@ -245,8 +245,8 @@ def test_evaluate_corpus_counts_under_and_over_escalation():
 
     assert report.metrics["under_escalation_rate"] == 0.5
     assert report.metrics["over_escalation_rate"] == 0.5
-    assert report.metrics["false_reassurance_rate"] == 0.5
-    assert report.metrics["false_escalation_rate"] == 0.0
+    assert report.metrics["false_reassurance_rate"] == 1.0
+    assert report.metrics["false_escalation_rate"] == 1.0
 
 
 def test_evaluate_corpus_retains_unknown_label_rows_but_excludes_from_metrics():
@@ -277,6 +277,8 @@ def test_example_corpus_can_be_evaluated_end_to_end():
     assert report.predicted_band_counts["expert_led_or_no_autonomous_use"] >= 2
 ```
 
+False reassurance uses adjudicated threshold-positive cases as the denominator. False escalation uses adjudicated threshold-negative cases as the denominator.
+
 - [ ] **Step 2: Run tests to verify RED**
 
 Run:
@@ -295,7 +297,6 @@ Update `core_model/__init__.py`:
 
 ```python
 from .evaluation_runner import (
-    BAND_ORDINALS,
     EvaluationReport,
     EvaluationRow,
     evaluate_corpus,

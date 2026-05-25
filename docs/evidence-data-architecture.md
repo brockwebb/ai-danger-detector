@@ -214,6 +214,8 @@ Core metrics:
 
 False reassurance should receive special attention because ADD is meant to constrain risky reliance. A model that looks accurate overall but repeatedly under-escalates consequential cases should be revised or rejected.
 
+The first reference evaluation path is ordinal rather than probabilistic. `core_model/evaluation_runner.py` scores an `EvidenceCorpus` with the provisional rubric scorer, compares predicted oversight bands with adjudicated `oversight_label` values, and reports exact band agreement, mean absolute band error, under-escalation, over-escalation, false reassurance, false escalation, band counts, and source coverage. These outputs are useful for early model comparison, but they are not Brier scores, log loss, confidence intervals, or evidence of calibrated probability.
+
 ## Source Admission and Removal
 
 New evidence sources should pass an admission review before becoming active:
@@ -285,6 +287,7 @@ The first backend implementation should create:
 - `core_model/evidence_corpus.py` for calibration filtering, feature rows, coverage summaries, reproducible splits, and data snapshots.
 - `core_model/evidence_io.py` for loading local source registry JSON and evidence JSONL into the corpus.
 - `core_model/rubric_scorer.py` for a provisional baseline model that consumes evidence units and feature rows.
+- `core_model/evaluation_runner.py` for ordinal comparison of predicted oversight bands against adjudicated labels.
 - `core_model/performance_metrics.py` for calibration, scoring, and false reassurance metrics.
 - `docs/adjudication-protocol.md` for the case review and evidence labeling protocol.
 - `data/examples/` for a synthetic example corpus that demonstrates file format and loader behavior.
@@ -293,17 +296,18 @@ The first backend implementation should create:
 - `tests/test_evidence_io.py` for local data loading and load-error context.
 - `tests/test_example_corpus.py` for example corpus loading and calibration-exclusion behavior.
 - `tests/test_rubric_scorer.py` for baseline scorer behavior, monotonicity, and example-corpus scoring.
+- `tests/test_evaluation_runner.py` for ordinal evaluation reports, unknown labels, and example-corpus evaluation.
 - `tests/test_source_registry.py` for source admission, deprecation, and audit trail behavior.
 
 This should come before a GUI or end-user workflow. The immediate goal is to make ADD's evidence base inspectable, testable, and flexible enough to survive better data.
 
 ## Reference Implementation
 
-The first backend evidence implementation lives in `core_model/evidence_schema.py`, `core_model/source_registry.py`, `core_model/evidence_corpus.py`, `core_model/evidence_io.py`, `core_model/rubric_scorer.py`, and `core_model/performance_metrics.py`, supported by `docs/adjudication-protocol.md`.
+The first backend evidence implementation lives in `core_model/evidence_schema.py`, `core_model/source_registry.py`, `core_model/evidence_corpus.py`, `core_model/evidence_io.py`, `core_model/rubric_scorer.py`, `core_model/evaluation_runner.py`, and `core_model/performance_metrics.py`, supported by `docs/adjudication-protocol.md`.
 
-It does not yet collect real evidence or tune model weights. Its purpose is to define the typed records, source lifecycle behavior, corpus bridge, local file-backed loading path, adjudication process, a provisional baseline scorer, reproducible snapshot metadata, and metric calculations that future calibration and model-comparison runs will need.
+It does not yet collect real evidence or tune model weights. Its purpose is to define the typed records, source lifecycle behavior, corpus bridge, local file-backed loading path, adjudication process, a provisional baseline scorer, an ordinal evaluation report, reproducible snapshot metadata, and metric calculations that future calibration and model-comparison runs will need.
 
-The baseline scorer consumes `EvidenceUnit` objects and feature rows. It gives later Bayesian, Markov, statistical, and ensemble models a transparent comparison point before calibrated evidence is available.
+The baseline scorer consumes `EvidenceUnit` objects and feature rows. The evaluation runner turns those scores into traceable row-level comparisons against adjudicated oversight bands. Together, they give later Bayesian, Markov, statistical, and ensemble models a transparent comparison point before calibrated evidence is available.
 
 The example corpus in `data/examples/` is synthetic. It is useful for testing and documentation, but it is marked experimental and excluded from calibration by default.
 
