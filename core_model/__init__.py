@@ -21,6 +21,13 @@ from .bayesian_calibration import (
     BetaPrior,
     update_beta_binomial,
 )
+from .calibration_observations import (
+    CalibrationObservationConfig,
+    CalibrationObservationSet,
+    CalibrationParameter,
+    ExcludedEvidence,
+    build_calibration_observations,
+)
 from .evaluation_runner import EvaluationReport, EvaluationRow, evaluate_corpus
 from .model_comparison import (
     ModelComparisonReport,
@@ -81,6 +88,9 @@ __all__ = [
     "BetaObservation",
     "BetaPosterior",
     "BetaPrior",
+    "CalibrationObservationConfig",
+    "CalibrationObservationSet",
+    "CalibrationParameter",
     "DistributionSpec",
     "DataSnapshot",
     "DEFAULT_RUBRIC_CONFIG",
@@ -93,6 +103,7 @@ __all__ = [
     "EvidenceQualityTier",
     "EvidenceType",
     "EvidenceUnit",
+    "ExcludedEvidence",
     "MarkovState",
     "ModelComparisonReport",
     "ModelComparisonRow",
@@ -119,6 +130,7 @@ __all__ = [
     "always_trained_review_scorer",
     "baseline_rubric_scorer",
     "build_transition_matrix",
+    "build_calibration_observations",
     "brier_score",
     "calculate_oversight_score",
     "compare_models",
