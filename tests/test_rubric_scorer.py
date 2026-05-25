@@ -6,7 +6,10 @@ from core_model.evidence_schema import (
     OversightLabel,
     UserExpertise,
 )
-from core_model.rubric_scorer import score_evidence_unit
+from core_model.evidence_corpus import EvidenceCorpus
+from core_model.evidence_io import load_corpus
+from core_model.source_registry import SourceRegistry, SourceStatus, SourceType
+from core_model.rubric_scorer import score_evidence_unit, score_feature_row
 
 
 def _evidence(**overrides):
@@ -66,3 +69,74 @@ def test_lower_source_quality_adds_uncertainty_driver():
 
     assert weak.score > strong.score
     assert "source uncertainty" in weak.drivers
+
+
+def test_high_harm_low_detectability_escalates_to_expert_review():
+    result = score_evidence_unit(
+        _evidence(
+            domain="health",
+            harm_severity=0.85,
+            detectability=0.2,
+            reversibility=0.5,
+            verification_burden=0.8,
+            user_expertise=UserExpertise.NON_EXPERT,
+            governance_context="no expert review",
+        )
+    )
+
+    assert result.band in {
+        OversightLabel.EXPERT_REVIEW_REQUIRED,
+        OversightLabel.EXPERT_LED_OR_NO_AUTONOMOUS_USE,
+    }
+    assert any("high harm" in driver for driver in result.drivers)
+
+
+def test_extreme_harm_low_detection_and_low_reversibility_escalates_to_expert_led():
+    result = score_evidence_unit(
+        _evidence(
+            harm_severity=0.95,
+            detectability=0.2,
+            reversibility=0.2,
+            verification_burden=0.95,
+            user_expertise=UserExpertise.NON_EXPERT,
+            governance_context="no review",
+        )
+    )
+
+    assert result.band is OversightLabel.EXPERT_LED_OR_NO_AUTONOMOUS_USE
+
+
+def test_feature_rows_can_be_scored():
+    registry = SourceRegistry()
+    registry.add_source(
+        source_id="src-active",
+        source_name="Active cases",
+        source_type=SourceType.CASE_SET,
+        owner_or_publisher="ADD",
+        license_or_access="private",
+        update_cadence="one-time",
+        coverage=("creative",),
+        known_biases=(),
+        quality_tier=EvidenceQualityTier.TIER_1,
+    )
+    registry.update_status("src-active", SourceStatus.ACTIVE, reason="approved")
+    corpus = EvidenceCorpus(registry)
+    corpus.add(_evidence())
+
+    result = score_feature_row(corpus.feature_rows()[0])
+
+    assert result.band is OversightLabel.CASUAL_EXPLORATORY
+    assert result.factor_scores["harm_severity"] == 0.05
+
+
+def test_example_corpus_scores_high_stakes_above_creative_case():
+    corpus = load_corpus("data/examples/sources.json", "data/examples/evidence.jsonl")
+
+    scores = {
+        unit.domain: score_evidence_unit(unit)
+        for unit in corpus.evidence
+    }
+
+    assert scores["health"].score > scores["creative"].score
+    assert scores["finance"].score > scores["education"].score
+    assert scores["health"].band is OversightLabel.EXPERT_LED_OR_NO_AUTONOMOUS_USE

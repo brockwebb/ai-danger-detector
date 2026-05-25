@@ -39,6 +39,13 @@ from .performance_metrics import (
     interval_coverage,
     log_loss,
 )
+from .rubric_scorer import (
+    DEFAULT_RUBRIC_CONFIG,
+    RubricScore,
+    RubricScoringConfig,
+    score_evidence_unit,
+    score_feature_row,
+)
 from .source_registry import (
     EvidenceSource,
     SourceAuditEvent,
@@ -50,6 +57,7 @@ from .source_registry import (
 __all__ = [
     "DistributionSpec",
     "DataSnapshot",
+    "DEFAULT_RUBRIC_CONFIG",
     "EvidenceSource",
     "EvidenceCorpus",
     "EvidenceLoadError",
@@ -59,6 +67,8 @@ __all__ = [
     "EvidenceUnit",
     "MarkovState",
     "OutcomeLabel",
+    "RubricScore",
+    "RubricScoringConfig",
     "OversightLabel",
     "ScenarioSpec",
     "SampledScenario",
@@ -83,6 +93,8 @@ __all__ = [
     "load_evidence_units",
     "load_source_registry",
     "run_monte_carlo",
+    "score_evidence_unit",
+    "score_feature_row",
     "summarize_simulation",
     "validate_transition_matrix",
 ]
