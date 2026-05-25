@@ -62,6 +62,7 @@ AI-Danger-Detector/
 |   |-- evidence_corpus.py          # Evidence corpus, summaries, splits, snapshots
 |   |-- evidence_io.py              # Local JSON/JSONL evidence loading
 |   |-- source_registry.py          # Source lifecycle and audit trail metadata
+|   |-- rubric_scorer.py            # Provisional baseline oversight scorer
 |   |-- performance_metrics.py      # Calibration and scoring metrics
 |   `-- numerical_framework.py      # Monte Carlo and Markov reference implementation
 |
@@ -70,6 +71,7 @@ AI-Danger-Detector/
 |   |-- test_evidence_corpus.py     # Evidence corpus tests
 |   |-- test_evidence_io.py         # Evidence data loading tests
 |   |-- test_example_corpus.py      # Example corpus loading tests
+|   |-- test_rubric_scorer.py       # Baseline scorer tests
 |   |-- test_source_registry.py     # Source registry tests
 |   |-- test_performance_metrics.py # Metric tests
 |   `-- test_numerical_framework.py # Numerical framework tests

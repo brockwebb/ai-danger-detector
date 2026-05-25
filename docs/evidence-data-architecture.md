@@ -284,6 +284,7 @@ The first backend implementation should create:
 - `core_model/source_registry.py` for source metadata and active/quarantined status.
 - `core_model/evidence_corpus.py` for calibration filtering, feature rows, coverage summaries, reproducible splits, and data snapshots.
 - `core_model/evidence_io.py` for loading local source registry JSON and evidence JSONL into the corpus.
+- `core_model/rubric_scorer.py` for a provisional baseline model that consumes evidence units and feature rows.
 - `core_model/performance_metrics.py` for calibration, scoring, and false reassurance metrics.
 - `docs/adjudication-protocol.md` for the case review and evidence labeling protocol.
 - `data/examples/` for a synthetic example corpus that demonstrates file format and loader behavior.
@@ -291,15 +292,18 @@ The first backend implementation should create:
 - `tests/test_evidence_corpus.py` for corpus validation, traceability, splitting, and snapshot behavior.
 - `tests/test_evidence_io.py` for local data loading and load-error context.
 - `tests/test_example_corpus.py` for example corpus loading and calibration-exclusion behavior.
+- `tests/test_rubric_scorer.py` for baseline scorer behavior, monotonicity, and example-corpus scoring.
 - `tests/test_source_registry.py` for source admission, deprecation, and audit trail behavior.
 
 This should come before a GUI or end-user workflow. The immediate goal is to make ADD's evidence base inspectable, testable, and flexible enough to survive better data.
 
 ## Reference Implementation
 
-The first backend evidence implementation lives in `core_model/evidence_schema.py`, `core_model/source_registry.py`, `core_model/evidence_corpus.py`, `core_model/evidence_io.py`, and `core_model/performance_metrics.py`, supported by `docs/adjudication-protocol.md`.
+The first backend evidence implementation lives in `core_model/evidence_schema.py`, `core_model/source_registry.py`, `core_model/evidence_corpus.py`, `core_model/evidence_io.py`, `core_model/rubric_scorer.py`, and `core_model/performance_metrics.py`, supported by `docs/adjudication-protocol.md`.
 
-It does not yet collect real evidence or tune model weights. Its purpose is to define the typed records, source lifecycle behavior, corpus bridge, local file-backed loading path, adjudication process, reproducible snapshot metadata, and metric calculations that future calibration and model-comparison runs will need.
+It does not yet collect real evidence or tune model weights. Its purpose is to define the typed records, source lifecycle behavior, corpus bridge, local file-backed loading path, adjudication process, a provisional baseline scorer, reproducible snapshot metadata, and metric calculations that future calibration and model-comparison runs will need.
+
+The baseline scorer consumes `EvidenceUnit` objects and feature rows. It gives later Bayesian, Markov, statistical, and ensemble models a transparent comparison point before calibrated evidence is available.
 
 The example corpus in `data/examples/` is synthetic. It is useful for testing and documentation, but it is marked experimental and excluded from calibration by default.
 

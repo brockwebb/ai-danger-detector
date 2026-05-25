@@ -45,6 +45,20 @@ Interaction terms matter. High harm plus low detectability is worse than either 
 
 Moderate harm with non-expert users should usually escalate to at least Band 3, Trained Review Required. If the user cannot reliably detect, contest, or mitigate mistakes, ordinary review is not enough even when the task is not obviously high stakes.
 
+## Reference Scorer
+
+The first reference scorer lives in `core_model/rubric_scorer.py`. It is a provisional, assumption-driven baseline for turning an `EvidenceUnit` or feature row into:
+
+- an ordinal score from 0.0 to 1.0,
+- an oversight band,
+- normalized factor scores,
+- main escalation drivers,
+- assumptions attached to the result.
+
+The baseline scorer currently uses harm severity, low detectability, low reversibility, verification burden, user expertise, governance context, and source quality. It also applies conservative escalation rules for high-harm cases with low detectability, low reversibility, or high verification burden for non-expert users.
+
+This scorer is intentionally simple. It exists so future validation work has a transparent baseline to test against Bayesian, Markov, statistical, or ensemble models. It should not be read as calibrated or empirically predictive.
+
 ## Example Scenarios
 
 | Scenario | Typical band | Interpretation |
