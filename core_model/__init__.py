@@ -16,6 +16,14 @@ from .evidence_io import (
     load_source_registry,
 )
 from .evaluation_runner import EvaluationReport, EvaluationRow, evaluate_corpus
+from .model_comparison import (
+    ModelComparisonReport,
+    ModelComparisonRow,
+    ScorerDefinition,
+    ScorerOutputType,
+    baseline_rubric_scorer,
+    compare_models,
+)
 
 from .numerical_framework import (
     DistributionSpec,
@@ -69,11 +77,15 @@ __all__ = [
     "EvidenceType",
     "EvidenceUnit",
     "MarkovState",
+    "ModelComparisonReport",
+    "ModelComparisonRow",
     "OutcomeLabel",
     "RubricScore",
     "RubricScoringConfig",
     "OversightLabel",
     "ScenarioSpec",
+    "ScorerDefinition",
+    "ScorerOutputType",
     "SampledScenario",
     "SimulationConfig",
     "SimulationResult",
@@ -83,9 +95,11 @@ __all__ = [
     "SourceType",
     "UserExpertise",
     "WorkflowResult",
+    "baseline_rubric_scorer",
     "build_transition_matrix",
     "brier_score",
     "calculate_oversight_score",
+    "compare_models",
     "evaluate_markov_workflow",
     "evaluate_corpus",
     "expected_calibration_error",
