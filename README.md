@@ -1,11 +1,20 @@
 # AI Danger Detector (ADD)
 
-AI Danger Detector is a prototype framework for estimating when AI-assisted work requires human expertise, trained review, expert oversight, or restraint.
+AI Danger Detector was an exploratory prototype for estimating when AI-assisted work requires human expertise, trained review, expert oversight, or restraint.
 
-The project began as a simple expertise-risk calculator. It is evolving into an inspectable oversight triage framework: part governance argument, part model rubric, and part numerical foundation for simulation and validation work.
+The project began as a simple expertise-risk calculator and evolved into an inspectable oversight triage framework. That exploration is now stopped. The calibrated risk-score path proved too evidence-heavy, too expensive to maintain honestly, and too likely to create false authority without a serious empirical program.
+
+## Project Status
+
+Active development has stopped.
+
+The final assessment is in [Project Postmortem: Why We Stopped Building AI Danger Detector as a Risk Score](evaluation/postmortem.md).
+
+The repository remains available as an exploratory record. Its most useful lesson is that human-in-the-loop oversight only works when the human or workflow can detect, contest, and correct relevant AI failures before consequential action. The project should not be presented as a validated safety tool, calibrated risk model, hallucination benchmark, or general AI danger score.
 
 ## Current Foundation
 
+- [Project Postmortem](evaluation/postmortem.md)
 - [Whitepaper](docs/whitepaper.md)
 - [Model Rubric](docs/model-rubric.md)
 - [Numerical Framework](docs/numerical-framework.md)
@@ -15,13 +24,13 @@ The project began as a simple expertise-risk calculator. It is evolving into an 
 
 ## Status
 
-This is not a validated safety, medical, legal, financial, or compliance tool. The active Python code is a first reference implementation of the numerical framework, not an empirically calibrated instrument. The whitepaper and supporting docs define the calibration work needed before stronger claims would be justified.
+This is not a validated safety, medical, legal, financial, or compliance tool. The Python code is a reference implementation of the abandoned exploratory framework, not an empirically calibrated instrument. The supporting docs define why stronger claims would have required evidence and validation beyond the scope of this project.
 
-## What is AI Danger Detector?
+## What Was AI Danger Detector?
 
 AI Danger Detector, or ADD, is a working name for an oversight triage framework. "Danger Detector" is shorthand for identifying where AI-assisted work may need more human expertise or restraint; it is not an oracle and does not determine that a use case is safe.
 
-The intended framework combines:
+The intended framework combined:
 
 - A public-facing governance argument for why oversight should scale with expertise risk.
 - A model rubric for translating scenario properties into review expectations.
@@ -32,13 +41,13 @@ The intended framework combines:
 
 AI systems can be useful across everyday and high-stakes work, but the appropriate level of human involvement depends on context. A casual brainstorming task, a medical decision, a legal filing, and a financial recommendation should not receive the same oversight treatment.
 
-ADD is being developed to make those distinctions inspectable. The current goal is to clarify what would need to be measured, reviewed, and validated before an AI-assisted task could be treated as lower risk.
+ADD was developed to make those distinctions inspectable. The final conclusion is that a general calibrated risk-score tool would require more evidence, review, and maintenance than this project could honestly support.
 
-## Current Implementation
+## Exploratory Implementation
 
-The active Python implementation lives in `core_model/`. It includes the numerical framework plus an evidence backbone for typed evidence records, source registry metadata, corpus management, local data loading, reproducible data snapshots, a provisional rubric scorer, deterministic reference policy baselines, an ordinal evaluation runner, a model-comparison layer, calibration-oriented performance metrics, beta-binomial calibration primitives, and an evidence-to-calibration observation bridge.
+The Python implementation lives in `core_model/`. It includes the numerical framework plus an evidence backbone for typed evidence records, source registry metadata, corpus management, local data loading, reproducible data snapshots, a provisional rubric scorer, deterministic reference policy baselines, an ordinal evaluation runner, a model-comparison layer, calibration-oriented performance metrics, beta-binomial calibration primitives, and an evidence-to-calibration observation bridge.
 
-Earlier exploratory calculators, scripts, and sensitivity experiments are preserved in `archive/exploratory-prototype/` for historical reference. They are not the active implementation.
+Earlier exploratory calculators, scripts, and sensitivity experiments are preserved in `archive/exploratory-prototype/` for historical reference.
 
 ## Project Structure
 
