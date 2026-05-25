@@ -15,6 +15,12 @@ from .evidence_io import (
     load_evidence_units,
     load_source_registry,
 )
+from .bayesian_calibration import (
+    BetaObservation,
+    BetaPosterior,
+    BetaPrior,
+    update_beta_binomial,
+)
 from .evaluation_runner import EvaluationReport, EvaluationRow, evaluate_corpus
 from .model_comparison import (
     ModelComparisonReport,
@@ -72,6 +78,9 @@ from .source_registry import (
 )
 
 __all__ = [
+    "BetaObservation",
+    "BetaPosterior",
+    "BetaPrior",
     "DistributionSpec",
     "DataSnapshot",
     "DEFAULT_RUBRIC_CONFIG",
@@ -128,5 +137,6 @@ __all__ = [
     "score_evidence_unit",
     "score_feature_row",
     "summarize_simulation",
+    "update_beta_binomial",
     "validate_transition_matrix",
 ]
