@@ -24,6 +24,14 @@ from .model_comparison import (
     baseline_rubric_scorer,
     compare_models,
 )
+from .reference_scorers import (
+    always_assisted_scorer,
+    always_casual_scorer,
+    always_expert_led_scorer,
+    always_expert_review_scorer,
+    always_trained_review_scorer,
+    reference_policy_scorers,
+)
 
 from .numerical_framework import (
     DistributionSpec,
@@ -95,6 +103,11 @@ __all__ = [
     "SourceType",
     "UserExpertise",
     "WorkflowResult",
+    "always_assisted_scorer",
+    "always_casual_scorer",
+    "always_expert_led_scorer",
+    "always_expert_review_scorer",
+    "always_trained_review_scorer",
     "baseline_rubric_scorer",
     "build_transition_matrix",
     "brier_score",
@@ -110,6 +123,7 @@ __all__ = [
     "load_corpus",
     "load_evidence_units",
     "load_source_registry",
+    "reference_policy_scorers",
     "run_monte_carlo",
     "score_evidence_unit",
     "score_feature_row",
