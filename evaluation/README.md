@@ -6,9 +6,10 @@ This folder contains a critical review of the AI Danger Detector project as it e
 
 Artifacts:
 
+- [postmortem.md](postmortem.md) - final assessment of why the calibrated risk-score path was stopped.
 - [critical_review.md](critical_review.md) - decision memo and strategic recommendation.
 - [technical_health_check.md](technical_health_check.md) - repo evidence, runnable-state checks, and code risks.
 - [market_landscape.md](market_landscape.md) - current AI risk/governance context and comparable free tooling.
 - [refresh_plan.md](refresh_plan.md) - scoped paths for revival if the project is continued.
 
-Bottom line: the concept is still interesting, but the current project should not be presented as a validated safety tool. A small refresh is worth considering if it is repositioned as an expertise-and-oversight rubric for AI use cases, backed by transparent assumptions and current governance frameworks.
+Bottom line: the calibrated risk-score path should stop. The concept remains useful as a cautionary argument about human detectability, oversight, and autonomy gating, but the project should not be presented as a validated safety tool or general AI danger score.
