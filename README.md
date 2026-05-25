@@ -36,7 +36,7 @@ ADD is being developed to make those distinctions inspectable. The current goal 
 
 ## Current Implementation
 
-The active Python implementation lives in `core_model/`. It includes the numerical framework plus an evidence backbone for typed evidence records, source registry metadata, corpus management, local data loading, reproducible data snapshots, a provisional rubric scorer, an ordinal evaluation runner, a model-comparison layer, and calibration-oriented performance metrics.
+The active Python implementation lives in `core_model/`. It includes the numerical framework plus an evidence backbone for typed evidence records, source registry metadata, corpus management, local data loading, reproducible data snapshots, a provisional rubric scorer, deterministic reference policy baselines, an ordinal evaluation runner, a model-comparison layer, and calibration-oriented performance metrics.
 
 Earlier exploratory calculators, scripts, and sensitivity experiments are preserved in `archive/exploratory-prototype/` for historical reference. They are not the active implementation.
 
@@ -63,6 +63,7 @@ AI-Danger-Detector/
 |   |-- evidence_io.py              # Local JSON/JSONL evidence loading
 |   |-- source_registry.py          # Source lifecycle and audit trail metadata
 |   |-- rubric_scorer.py            # Provisional baseline oversight scorer
+|   |-- reference_scorers.py        # Deterministic TEVV policy baselines
 |   |-- evaluation_runner.py        # Ordinal scorer evaluation against labels
 |   |-- model_comparison.py         # Named scorer comparison and metric compatibility
 |   |-- performance_metrics.py      # Calibration and scoring metrics
@@ -74,6 +75,7 @@ AI-Danger-Detector/
 |   |-- test_evidence_io.py         # Evidence data loading tests
 |   |-- test_example_corpus.py      # Example corpus loading tests
 |   |-- test_rubric_scorer.py       # Baseline scorer tests
+|   |-- test_reference_scorers.py   # Reference policy baseline tests
 |   |-- test_evaluation_runner.py   # Ordinal evaluation runner tests
 |   |-- test_model_comparison.py    # Model comparison and metric compatibility tests
 |   |-- test_source_registry.py     # Source registry tests
