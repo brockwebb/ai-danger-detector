@@ -222,6 +222,8 @@ Reference policy baselines in `core_model/reference_scorers.py` provide fixed-ba
 
 The beta-binomial primitives in `core_model/bayesian_calibration.py` are the first Bayesian calibration machinery. They update bounded probability parameters from traceable observations and preserve source IDs, evidence IDs, weights, and notes. They are not a calibrated ADD model by themselves and should not be used for unbounded rates or exposure-based event counts.
 
+The bridge in `core_model/calibration_observations.py` converts eligible evidence records into traceable beta observations for bounded parameters such as `p_error_per_task`, `detectability`, and `reversibility`. It reports exclusions, applies explicit quality-and-confidence weights, and labels scalar detectability and reversibility mappings as pseudo-observations. It prepares calibration inputs for inspection; it does not update priors or estimate real-world risk by itself.
+
 ## Source Admission and Removal
 
 New evidence sources should pass an admission review before becoming active:
@@ -298,6 +300,7 @@ The first backend implementation should create:
 - `core_model/model_comparison.py` for named scorer comparison, metric compatibility notes, and TEVV decision-layer summaries.
 - `core_model/performance_metrics.py` for calibration, scoring, and false reassurance metrics.
 - `core_model/bayesian_calibration.py` for beta-binomial priors, weighted observations, posterior updates, and traceable summaries.
+- `core_model/calibration_observations.py` for converting eligible evidence into traceable beta observations with exclusions and weights.
 - `docs/adjudication-protocol.md` for the case review and evidence labeling protocol.
 - `data/examples/` for a synthetic example corpus that demonstrates file format and loader behavior.
 - `tests/test_evidence_schema.py` for schema validation and quality-tier behavior.
@@ -310,14 +313,15 @@ The first backend implementation should create:
 - `tests/test_model_comparison.py` for named scorer comparison and metric-compatibility behavior.
 - `tests/test_source_registry.py` for source admission, deprecation, and audit trail behavior.
 - `tests/test_bayesian_calibration.py` for beta-binomial validation, weighted updates, posterior summaries, and traceability.
+- `tests/test_calibration_observations.py` for evidence-to-observation mapping, weighting, exclusions, and pseudo-observation labeling.
 
 This should come before a GUI or end-user workflow. The immediate goal is to make ADD's evidence base inspectable, testable, and flexible enough to survive better data.
 
 ## Reference Implementation
 
-The first backend evidence implementation lives in `core_model/evidence_schema.py`, `core_model/source_registry.py`, `core_model/evidence_corpus.py`, `core_model/evidence_io.py`, `core_model/rubric_scorer.py`, `core_model/reference_scorers.py`, `core_model/evaluation_runner.py`, `core_model/model_comparison.py`, `core_model/performance_metrics.py`, and `core_model/bayesian_calibration.py`, supported by `docs/adjudication-protocol.md`.
+The first backend evidence implementation lives in `core_model/evidence_schema.py`, `core_model/source_registry.py`, `core_model/evidence_corpus.py`, `core_model/evidence_io.py`, `core_model/rubric_scorer.py`, `core_model/reference_scorers.py`, `core_model/evaluation_runner.py`, `core_model/model_comparison.py`, `core_model/performance_metrics.py`, `core_model/bayesian_calibration.py`, and `core_model/calibration_observations.py`, supported by `docs/adjudication-protocol.md`.
 
-It does not yet collect real evidence or tune model weights. Its purpose is to define the typed records, source lifecycle behavior, corpus bridge, local file-backed loading path, adjudication process, a provisional baseline scorer, reference policy baselines, an ordinal evaluation report, named scorer comparison, reproducible snapshot metadata, metric calculations, and traceable Bayesian update primitives that future calibration and model-comparison runs will need.
+It does not yet collect real evidence or tune model weights. Its purpose is to define the typed records, source lifecycle behavior, corpus bridge, local file-backed loading path, adjudication process, a provisional baseline scorer, reference policy baselines, an ordinal evaluation report, named scorer comparison, reproducible snapshot metadata, metric calculations, traceable Bayesian update primitives, and evidence-to-observation mappings that future calibration and model-comparison runs will need.
 
 The baseline scorer consumes `EvidenceUnit` objects and feature rows. Reference policy baselines provide simple controls that expose what trivial fixed policies would do. The evaluation runner turns those scores into traceable row-level comparisons against adjudicated oversight bands. The model-comparison layer preserves metric compatibility notes so later Bayesian, Markov, statistical, and ensemble models can be compared without pretending their native outputs are the same.
 

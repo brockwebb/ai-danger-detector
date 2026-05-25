@@ -46,6 +46,8 @@ Calibration should preserve disagreement when experts do not agree. A wide or mu
 
 The first Bayesian calibration implementation lives in `core_model/bayesian_calibration.py`. It provides beta-binomial update primitives for bounded probabilities with traceable priors, weighted observations, source IDs, evidence IDs, and posterior summaries. It is calibration machinery only: it does not create a Bayesian scorer, does not perform MCMC, and does not model unbounded event rates such as `lambda_error_rate`.
 
+The evidence bridge in `core_model/calibration_observations.py` prepares observations for those beta-binomial updates. It maps eligible evidence outcomes into event/non-event observations for `p_error_per_task` and maps bounded scalar fields such as `detectability` and `reversibility` into explicitly labeled pseudo-observations. Observation extraction stays separate from posterior updating so reviewers can inspect exclusions, weights, and mapping assumptions before priors are updated.
+
 ## Monte Carlo Simulation
 
 Monte Carlo simulation propagates uncertainty through the ADD model. Instead of producing only one oversight score, the simulation repeatedly samples uncertain parameters and records the resulting oversight band and threshold crossings.

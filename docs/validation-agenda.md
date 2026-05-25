@@ -57,6 +57,8 @@ Candidate models should be compared against trivial fixed policies before strong
 
 Bayesian updates should preserve traceability from posterior summaries back to priors, source IDs, evidence IDs, observation weights, and notes. Early beta-binomial updates should be treated as calibration machinery for bounded probabilities, not as proof that ADD is calibrated. Rate or exposure models should use separate count-model assumptions rather than forcing unbounded rates into beta priors.
 
+Evidence-to-observation bridge mappings should be treated as assumptions in the TEVV loop. Reports should identify which records were converted, which were excluded, which quality and confidence weights were applied, and where scalar fields were converted into pseudo-observations rather than empirical event counts. Sensitivity analysis should test whether conclusions change when these mappings or weights are revised.
+
 Sensitivity analysis should test whether conclusions depend on fragile choices of weights, priors, thresholds, or Markov transition probabilities. Reports should identify which assumptions most affect the oversight band, the probability of threshold crossing, and workflow outcomes such as unverified action or realized harm.
 
 Inter-rater reliability testing should have independent reviewers apply the rubric to the same cases using the same written instructions. Reports should include agreement statistics appropriate to the rating structure, disagreement themes, and examples of factor definitions that caused inconsistent scoring. Ambiguous rubric language should be revised and retested rather than treated as reviewer error by default.
