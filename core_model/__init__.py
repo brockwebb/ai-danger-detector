@@ -15,6 +15,7 @@ from .evidence_io import (
     load_evidence_units,
     load_source_registry,
 )
+from .evaluation_runner import EvaluationReport, EvaluationRow, evaluate_corpus
 
 from .numerical_framework import (
     DistributionSpec,
@@ -62,6 +63,8 @@ __all__ = [
     "EvidenceCorpus",
     "EvidenceLoadError",
     "EvidenceSplit",
+    "EvaluationReport",
+    "EvaluationRow",
     "EvidenceQualityTier",
     "EvidenceType",
     "EvidenceUnit",
@@ -84,6 +87,7 @@ __all__ = [
     "brier_score",
     "calculate_oversight_score",
     "evaluate_markov_workflow",
+    "evaluate_corpus",
     "expected_calibration_error",
     "false_escalation_rate",
     "false_reassurance_rate",
