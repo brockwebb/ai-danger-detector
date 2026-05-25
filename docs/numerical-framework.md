@@ -44,6 +44,8 @@ Priors should be versioned by domain, model family, task type, and date. A prior
 
 Calibration should preserve disagreement when experts do not agree. A wide or multimodal prior can be more honest than forcing a single consensus value.
 
+The first Bayesian calibration implementation lives in `core_model/bayesian_calibration.py`. It provides beta-binomial update primitives for bounded probabilities with traceable priors, weighted observations, source IDs, evidence IDs, and posterior summaries. It is calibration machinery only: it does not create a Bayesian scorer, does not perform MCMC, and does not model unbounded event rates such as `lambda_error_rate`.
+
 ## Monte Carlo Simulation
 
 Monte Carlo simulation propagates uncertainty through the ADD model. Instead of producing only one oversight score, the simulation repeatedly samples uncertain parameters and records the resulting oversight band and threshold crossings.

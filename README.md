@@ -36,7 +36,7 @@ ADD is being developed to make those distinctions inspectable. The current goal 
 
 ## Current Implementation
 
-The active Python implementation lives in `core_model/`. It includes the numerical framework plus an evidence backbone for typed evidence records, source registry metadata, corpus management, local data loading, reproducible data snapshots, a provisional rubric scorer, deterministic reference policy baselines, an ordinal evaluation runner, a model-comparison layer, and calibration-oriented performance metrics.
+The active Python implementation lives in `core_model/`. It includes the numerical framework plus an evidence backbone for typed evidence records, source registry metadata, corpus management, local data loading, reproducible data snapshots, a provisional rubric scorer, deterministic reference policy baselines, an ordinal evaluation runner, a model-comparison layer, calibration-oriented performance metrics, and beta-binomial calibration primitives.
 
 Earlier exploratory calculators, scripts, and sensitivity experiments are preserved in `archive/exploratory-prototype/` for historical reference. They are not the active implementation.
 
@@ -67,6 +67,7 @@ AI-Danger-Detector/
 |   |-- evaluation_runner.py        # Ordinal scorer evaluation against labels
 |   |-- model_comparison.py         # Named scorer comparison and metric compatibility
 |   |-- performance_metrics.py      # Calibration and scoring metrics
+|   |-- bayesian_calibration.py     # Beta-binomial calibration primitives
 |   `-- numerical_framework.py      # Monte Carlo and Markov reference implementation
 |
 |-- tests/
@@ -80,6 +81,7 @@ AI-Danger-Detector/
 |   |-- test_model_comparison.py    # Model comparison and metric compatibility tests
 |   |-- test_source_registry.py     # Source registry tests
 |   |-- test_performance_metrics.py # Metric tests
+|   |-- test_bayesian_calibration.py # Bayesian calibration primitive tests
 |   `-- test_numerical_framework.py # Numerical framework tests
 |
 |-- evaluation/

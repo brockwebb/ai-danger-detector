@@ -55,6 +55,8 @@ Model comparison should be part of the TEVV loop. Each candidate model should be
 
 Candidate models should be compared against trivial fixed policies before stronger performance claims are made. A useful model should either outperform reference policies on the relevant decision metrics or clearly explain a deliberate tradeoff, such as accepting more over-escalation to reduce false reassurance. Fixed policies should remain labeled as TEVV controls, not deployment recommendations.
 
+Bayesian updates should preserve traceability from posterior summaries back to priors, source IDs, evidence IDs, observation weights, and notes. Early beta-binomial updates should be treated as calibration machinery for bounded probabilities, not as proof that ADD is calibrated. Rate or exposure models should use separate count-model assumptions rather than forcing unbounded rates into beta priors.
+
 Sensitivity analysis should test whether conclusions depend on fragile choices of weights, priors, thresholds, or Markov transition probabilities. Reports should identify which assumptions most affect the oversight band, the probability of threshold crossing, and workflow outcomes such as unverified action or realized harm.
 
 Inter-rater reliability testing should have independent reviewers apply the rubric to the same cases using the same written instructions. Reports should include agreement statistics appropriate to the rating structure, disagreement themes, and examples of factor definitions that caused inconsistent scoring. Ambiguous rubric language should be revised and retested rather than treated as reviewer error by default.
